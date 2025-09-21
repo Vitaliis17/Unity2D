@@ -308,6 +308,7 @@ GameObject:
   - component: {fileID: 526811715}
   - component: {fileID: 526811714}
   - component: {fileID: 526811719}
+  - component: {fileID: 526811722}
   - component: {fileID: 526811718}
   - component: {fileID: 526811720}
   - component: {fileID: 526811721}
@@ -460,9 +461,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c6982eb5a76f9143886a002bad16792, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _triggerHandler: {fileID: 101577386}
   _speed: 180
-  _runningSpeed: 2
 --- !u!95 &526811719
 Animator:
   serializedVersion: 5
@@ -471,7 +470,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 526811713}
-  m_Enabled: 0
+  m_Enabled: 1
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 9e6f52e0333bc1344b0896cdde8b88ae, type: 2}
   m_CullingMode: 0
@@ -511,6 +510,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _fallMultiplier: 2
+--- !u!114 &526811722
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 526811713}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 246acf9fd5055dd41b6fb52de10e3ebd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _mover: {fileID: 526811718}
+  _jumper: {fileID: 526811720}
 --- !u!1 &712928160
 GameObject:
   m_ObjectHideFlags: 0

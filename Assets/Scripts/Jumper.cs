@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
@@ -11,6 +12,8 @@ public class Jumper : MonoBehaviour
 
     private bool _isGrounded;
     private bool _isJumping;
+
+    public event Action<bool> Jumped;
 
     private void Awake()
         => _rigidbody = GetComponent<Rigidbody2D>();
