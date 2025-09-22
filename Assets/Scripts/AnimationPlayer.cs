@@ -15,7 +15,18 @@ public class AnimationPlayer
         PlayAnimation();
     }
 
-    public void Play(AnimationNames name)
+    public void PlayDefault()
+    {
+        if (_currentAnimation != 0)
+            SetParameter(false);
+
+        _currentAnimation = AnimationNames.Idle;
+
+        SetParameter(true);
+        PlayAnimation();
+    }
+
+    public void Play(AnimationNames name = AnimationNames.Idle)
     {
         if (AnimationParametersPriority.IsMostPriority(name, _currentAnimation) == false)
             return;

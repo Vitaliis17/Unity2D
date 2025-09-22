@@ -5,12 +5,10 @@ public static class AnimationHashes
     public static readonly int Idle = Animator.StringToHash(nameof(Idle));
     public static readonly int Running = Animator.StringToHash(nameof(Running));
     public static readonly int Jumping = Animator.StringToHash(nameof(Jumping));
-    public static readonly int Falling = Animator.StringToHash(nameof(Falling));
 
     public static readonly int IsIdle = Animator.StringToHash(nameof(IsIdle));
     public static readonly int IsRunning = Animator.StringToHash(nameof(IsRunning));
     public static readonly int IsJumping = Animator.StringToHash(nameof(IsJumping));
-    public static readonly int IsFalling = Animator.StringToHash(nameof(IsFalling));
 
     public static int GetHashName(AnimationNames name)
     {
@@ -28,10 +26,6 @@ public static class AnimationHashes
 
             case AnimationNames.Jumping:
                 hash = Jumping;
-                break;
-
-            case AnimationNames.Falling:
-                hash = Falling;
                 break;
         }
 
@@ -54,10 +48,6 @@ public static class AnimationHashes
 
             case AnimationNames.Jumping:
                 hash = IsJumping;
-                break;
-
-            case AnimationNames.Falling:
-                hash = IsFalling;
                 break;
         }
 

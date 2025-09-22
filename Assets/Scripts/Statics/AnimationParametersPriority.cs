@@ -8,10 +8,9 @@ public static class AnimationParametersPriority
     {
         _animationsPriority = new Dictionary<AnimationNames, int>
         {
-            { AnimationNames.Falling, 1},
-            { AnimationNames.Jumping, 2},
-            { AnimationNames.Running, 3 },
-            { AnimationNames.Idle, 4 }
+            { AnimationNames.Jumping, 1},
+            { AnimationNames.Running, 2 },
+            { AnimationNames.Idle, 3 }
         };
     }
 

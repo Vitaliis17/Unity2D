@@ -13,7 +13,6 @@ public class Player : MonoBehaviour
 
     [SerializeField] private Animator _animator;
 
-    private Rigidbody2D _rigidbody;
     private DirectionReversalHandler _directionReversalHandler;
     private AnimationPlayer _animationPlayer;
 
@@ -21,14 +20,16 @@ public class Player : MonoBehaviour
     private float _jumpingDirection;
 
     private bool _isGrounded;
+    private bool _isJumping;
 
     private void Awake()
     {
-        _rigidbody = GetComponent<Rigidbody2D>();
-        _rigidbody.freezeRotation = true;
+        GetComponent<Rigidbody2D>().freezeRotation = true;
 
         _directionReversalHandler = new(transform.rotation.eulerAngles.y == 0);
         _animationPlayer = new(_animator);
+
+        _isJumping = false;
     }
 
     private void OnEnable()
@@ -37,7 +38,7 @@ public class Player : MonoBehaviour
         _jumpingInput.Moved += SetJumpingDirection;
 
         _triggerHandler.Triggered += SetGrounded;
-        _directionReversalHandler.DirectionChanged += SwapAngles;
+        _directionReversalHandler.DirectionChanged += RotateY;
     }
 
     private void OnDisable()
@@ -46,15 +47,24 @@ public class Player : MonoBehaviour
         _jumpingInput.Moved -= SetJumpingDirection;
 
         _triggerHandler.Triggered -= SetGrounded;
-        _directionReversalHandler.DirectionChanged -= SwapAngles;
+        _directionReversalHandler.DirectionChanged -= RotateY;
     }
 
     private void FixedUpdate()
     {
-        if (_isGrounded)
-            Jump();
-
         Move();
+
+        if (_isGrounded)
+        {
+            if (_isJumping)
+            {
+                _isJumping = false;
+                _animationPlayer.PlayDefault();
+            }
+
+            Jump();
+        }
+
         _directionReversalHandler.UpdateDirectionSigns(_runningDirection);
     }
 
@@ -76,13 +86,15 @@ public class Player : MonoBehaviour
 
         AnimationNames name = AnimationNames.Jumping;
         _animationPlayer.Play(name);
+
+        _isJumping = true;
     }
 
     private void Move()
     {
-        if(_runningDirection == 0)
+        if (_runningDirection == 0)
         {
-            Idle();
+            PlayIdle();
             return;
         }
 
@@ -92,13 +104,10 @@ public class Player : MonoBehaviour
         _animationPlayer.Play(name);
     }
 
-    private void Idle()
-    {
-        AnimationNames name = AnimationNames.Idle;
-        _animationPlayer.Play(name);
-    }
+    private void PlayIdle()
+        => _animationPlayer.PlayDefault();
 
-    private void SwapAngles()
+    private void RotateY()
     {
         const int AngleAmount = 180;
 
