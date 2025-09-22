@@ -1,36 +1,107 @@
 using UnityEngine;
 
-[RequireComponent(typeof(Animator))]
-[RequireComponent(typeof(Mover))]
-[RequireComponent(typeof(Jumper))]
+[RequireComponent(typeof(Rigidbody2D))]
 public class Player : MonoBehaviour
 {
-    [SerializeField] private Mover _mover;
+    [SerializeField] private AxisInputHandler _runningInput;
+    [SerializeField] private AxisInputHandler _jumpingInput;
+
+    [SerializeField] private TriggerHandler _triggerHandler;
+
+    [SerializeField] private Runner _runner;
     [SerializeField] private Jumper _jumper;
 
-    private Animator _animator;
+    [SerializeField] private Animator _animator;
+
+    private Rigidbody2D _rigidbody;
+    private DirectionReversalHandler _directionReversalHandler;
+    private AnimationPlayer _animationPlayer;
+
+    private float _runningDirection;
+    private float _jumpingDirection;
+
+    private bool _isGrounded;
 
     private void Awake()
     {
-        GetComponent<Rigidbody2D>().freezeRotation = true;
+        _rigidbody = GetComponent<Rigidbody2D>();
+        _rigidbody.freezeRotation = true;
 
-        _animator = GetComponent<Animator>();
-        _animator.Play(AnimationHashes.IdleRight);
+        _directionReversalHandler = new(transform.rotation.eulerAngles.y == 0);
+        _animationPlayer = new(_animator);
     }
 
     private void OnEnable()
-        => _mover.DirectionChanged += Play;
+    {
+        _runningInput.Moved += SetRunningDirection;
+        _jumpingInput.Moved += SetJumpingDirection;
+
+        _triggerHandler.Triggered += SetGrounded;
+        _directionReversalHandler.DirectionChanged += SwapAngles;
+    }
 
     private void OnDisable()
-        => _mover.DirectionChanged -= Play;
-
-    private void Play(int direction)
     {
-        int hash = direction > 0 ? AnimationHashes.RunningRight : AnimationHashes.RunningLeft;
+        _runningInput.Moved -= SetRunningDirection;
+        _jumpingInput.Moved -= SetJumpingDirection;
 
-        if (direction == 0)
-            hash = AnimationHashes.IdleRight;
+        _triggerHandler.Triggered -= SetGrounded;
+        _directionReversalHandler.DirectionChanged -= SwapAngles;
+    }
 
-        _animator.Play(hash);
+    private void FixedUpdate()
+    {
+        if (_isGrounded)
+            Jump();
+
+        Move();
+        _directionReversalHandler.UpdateDirectionSigns(_runningDirection);
+    }
+
+    private void SetRunningDirection(float direction)
+        => _runningDirection = direction;
+
+    private void SetJumpingDirection(float direction)
+        => _jumpingDirection = direction;
+
+    private void SetGrounded(bool isGrounded)
+        => _isGrounded = isGrounded;
+
+    private void Jump()
+    {
+        _jumper.Jump(_jumpingDirection);
+
+        if (_jumpingDirection == 0)
+            return;
+
+        AnimationNames name = AnimationNames.Jumping;
+        _animationPlayer.Play(name);
+    }
+
+    private void Move()
+    {
+        if(_runningDirection == 0)
+        {
+            Idle();
+            return;
+        }
+
+        _runner.Move(_runningDirection);
+
+        AnimationNames name = AnimationNames.Running;
+        _animationPlayer.Play(name);
+    }
+
+    private void Idle()
+    {
+        AnimationNames name = AnimationNames.Idle;
+        _animationPlayer.Play(name);
+    }
+
+    private void SwapAngles()
+    {
+        const int AngleAmount = 180;
+
+        transform.Rotate(new(0, AngleAmount));
     }
 }

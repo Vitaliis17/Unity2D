@@ -1,50 +1,16 @@
-using System;
 using UnityEngine;
+using System;
 
-[RequireComponent(typeof(Rigidbody2D))]
-public class Jumper : MonoBehaviour
+[Serializable]
+public class Jumper
 {
-    [SerializeField] private TriggerHandler _triggerHandler;
-
+    [SerializeField] private Rigidbody2D _rigidbody;
+    
     [SerializeField, Min(0)] private float _force;
 
-    private Rigidbody2D _rigidbody;
-
-    private bool _isGrounded;
-    private bool _isJumping;
-
-    public event Action<bool> Jumped;
-
-    private void Awake()
-        => _rigidbody = GetComponent<Rigidbody2D>();
-
-    private void OnEnable()
-        => _triggerHandler.Triggered += SetGrounded;
-
-    private void OnDisable()
-        => _triggerHandler.Triggered -= SetGrounded;
-
-    private void Update()
+    public void Jump(float direction)
     {
-        if (Input.GetKeyDown(KeyCode.Space) && _isGrounded)
-            _isJumping = true;
+        direction *= _force;
+        _rigidbody.velocity = new(_rigidbody.velocity.x, direction);
     }
-
-    private void FixedUpdate()
-        => Jump();
-
-    private void Jump()
-    {
-        if (CanJump() == false)
-            return;
-
-        _rigidbody.velocity = new(_rigidbody.velocity.x, _force);
-        _isJumping = false;
-    }
-
-    private bool CanJump()
-        => _isGrounded && _isJumping;
-
-    private void SetGrounded(bool isGrounded)
-        => _isGrounded = isGrounded;
 }
