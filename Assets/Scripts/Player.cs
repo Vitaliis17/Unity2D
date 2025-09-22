@@ -16,9 +16,6 @@ public class Player : MonoBehaviour
     private DirectionReversalHandler _directionReversalHandler;
     private AnimationPlayer _animationPlayer;
 
-    private float _runningDirection;
-    private float _jumpingDirection;
-
     private bool _isGrounded;
     private bool _isJumping;
 
@@ -34,54 +31,45 @@ public class Player : MonoBehaviour
 
     private void OnEnable()
     {
-        _runningInput.Moved += SetRunningDirection;
-        _jumpingInput.Moved += SetJumpingDirection;
+        _runningInput.Moved += Move;
+        _runningInput.Moved += _directionReversalHandler.UpdateDirectionSigns;
+
+        _directionReversalHandler.DirectionChanged += RotateY;
+
+        _jumpingInput.Moved += Jump;
 
         _triggerHandler.Triggered += SetGrounded;
-        _directionReversalHandler.DirectionChanged += RotateY;
     }
 
     private void OnDisable()
     {
-        _runningInput.Moved -= SetRunningDirection;
-        _jumpingInput.Moved -= SetJumpingDirection;
+        _runningInput.Moved -= Move;
+        _runningInput.Moved -= _directionReversalHandler.UpdateDirectionSigns;
+
+        _directionReversalHandler.DirectionChanged -= RotateY;
+
+        _jumpingInput.Moved -= Jump;
 
         _triggerHandler.Triggered -= SetGrounded;
-        _directionReversalHandler.DirectionChanged -= RotateY;
     }
-
-    private void FixedUpdate()
-    {
-        Move();
-
-        if (_isGrounded)
-        {
-            if (_isJumping)
-            {
-                _isJumping = false;
-                _animationPlayer.PlayDefault();
-            }
-
-            Jump();
-        }
-
-        _directionReversalHandler.UpdateDirectionSigns(_runningDirection);
-    }
-
-    private void SetRunningDirection(float direction)
-        => _runningDirection = direction;
-
-    private void SetJumpingDirection(float direction)
-        => _jumpingDirection = direction;
 
     private void SetGrounded(bool isGrounded)
         => _isGrounded = isGrounded;
 
-    private void Jump()
+    private void Jump(float direction)
     {
-        _jumper.Jump(_jumpingDirection);
+        if (_isGrounded == false)
+            return;
 
-        if (_jumpingDirection == 0)
+        if (_isJumping)
+        {
+            _isJumping = false;
+            _animationPlayer.PlayDefault();
+        }
+
+        _jumper.Jump(direction);
+
+        if (direction == 0)
             return;
 
         AnimationNames name = AnimationNames.Jumping;
@@ -90,15 +78,15 @@ public class Player : MonoBehaviour
         _isJumping = true;
     }
 
-    private void Move()
+    private void Move(float direction)
     {
-        if (_runningDirection == 0)
+        if (direction == 0)
         {
             PlayIdle();
             return;
         }
 
-        _runner.Move(_runningDirection);
+        _runner.Move(direction);
 
         AnimationNames name = AnimationNames.Running;
         _animationPlayer.Play(name);
