@@ -1,22 +1,21 @@
 using UnityEngine;
-using System;
 
-[Serializable]
 public class Runner
 {
-    [SerializeField] private Rigidbody2D _rigidbody;
-    
-    [SerializeField, Min(0)] private float _speed;
+    private readonly float _speed;
 
-    public void Move(float direction)
+    public Runner(float speed)
+        => _speed = speed;
+
+    public void Move(Rigidbody2D rigidbody, float direction)
     {
         direction *= _speed * Time.fixedDeltaTime;
-        _rigidbody.velocity = new(direction, _rigidbody.velocity.y);
+        rigidbody.velocity = new(direction, rigidbody.velocity.y);
     }
 
-    public void MoveTowards(Transform target)
+    public void MoveTowards(Rigidbody2D rigidbody, Transform target)
     {
-        float nextPositionX = Mathf.MoveTowards(_rigidbody.position.x, target.position.x, _speed * Time.fixedDeltaTime);
-        _rigidbody.MovePosition(new(nextPositionX, _rigidbody.position.y));
+        float nextPositionX = Mathf.MoveTowards(rigidbody.position.x, target.position.x, _speed * Time.fixedDeltaTime);
+        rigidbody.MovePosition(new(nextPositionX, rigidbody.position.y));
     }
 }

@@ -1,16 +1,15 @@
 using UnityEngine;
-using System;
 
-[Serializable]
 public class Jumper
 {
-    [SerializeField] private Rigidbody2D _rigidbody;
-    
-    [SerializeField, Min(0)] private float _force;
+    private readonly float _force;
 
-    public void Jump(float direction)
+    public Jumper(float force)
+        => _force = force;
+
+    public void Jump(Rigidbody2D rigidbody, float direction)
     {
         direction *= _force;
-        _rigidbody.velocity = new(_rigidbody.velocity.x, direction);
+        rigidbody.velocity = new(rigidbody.velocity.x, direction);
     }
 }

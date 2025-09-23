@@ -3,8 +3,12 @@ using UnityEngine;
 [RequireComponent(typeof(CapsuleCollider2D), typeof(Rigidbody2D))]
 public class Patrolman : MonoBehaviour 
 {
-    [SerializeField] private Runner _runner;
+    [SerializeField, Min(0)] private float _speed;
+
     [SerializeField] private Transform[] _targetPoints;
+
+    private Rigidbody2D _rigidbody;
+    private Runner _runner;
 
     private int _currentTargetIndex;
     private int _directionIndex;
@@ -13,22 +17,29 @@ public class Patrolman : MonoBehaviour
     {
         const int PositiveDirection = 1;
 
+        _runner = new(_speed);
+
         _currentTargetIndex = 0;
         _directionIndex = PositiveDirection;
 
-        GetComponent<Rigidbody2D>().freezeRotation = true;
+        _rigidbody = GetComponent<Rigidbody2D>();
+        _rigidbody.freezeRotation = true;
     }
 
     private void FixedUpdate()
     {
-        _runner.MoveTowards(_targetPoints[_currentTargetIndex]);
+        _runner.MoveTowards(_rigidbody, _targetPoints[_currentTargetIndex]);
 
         if (IsReached(_targetPoints[_currentTargetIndex]))
             SetNextIndex();
     }
 
     private bool IsReached(Transform target)
-        => Mathf.Approximately(transform.position.x, target.position.x);
+    {
+        const float Offset = 0.1f;
+
+        return (transform.position - target.position).sqrMagnitude < Offset;
+    }
 
     private void SetNextIndex()
     {

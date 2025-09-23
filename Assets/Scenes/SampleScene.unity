@@ -620,12 +620,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _input: {fileID: 692668156}
   _triggerHandler: {fileID: 101577386}
-  _runner:
-    _rigidbody: {fileID: 526811715}
-    _speed: 180
-  _jumper:
-    _rigidbody: {fileID: 526811715}
-    _force: 5
+  _speed: 180
+  _jumpingForce: 6
 --- !u!1 &692668155
 GameObject:
   m_ObjectHideFlags: 0
@@ -1094,7 +1090,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 951829252202420038, guid: fbeca6996d740c94ab14dfc3ded47428, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4577030823034919532, guid: fbeca6996d740c94ab14dfc3ded47428, type: 3}
       propertyPath: _targetPoints.Array.size
@@ -1179,7 +1175,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5897869520138307887, guid: a09ac44a699b49849938d490278e7621, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 6
+      value: 5.630013
       objectReference: {fileID: 0}
     - target: {fileID: 5897869520138307887, guid: a09ac44a699b49849938d490278e7621, type: 3}
       propertyPath: m_LocalPosition.z
@@ -6895,7 +6891,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5897869520138307887, guid: a09ac44a699b49849938d490278e7621, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 6
+      value: 5.630013
       objectReference: {fileID: 0}
     - target: {fileID: 5897869520138307887, guid: a09ac44a699b49849938d490278e7621, type: 3}
       propertyPath: m_LocalPosition.z

@@ -7,8 +7,13 @@ public class Player : MonoBehaviour
 
     [SerializeField] private TriggerHandler _triggerHandler;
 
-    [SerializeField] private Runner _runner;
-    [SerializeField] private Jumper _jumper;
+    [SerializeField, Min(0)] private float _speed;
+    [SerializeField, Min(0)] private float _jumpingForce;
+
+    private Rigidbody2D _rigidbody;
+
+    private Runner _runner;
+    private Jumper _jumper;
 
     private DirectionReversalHandler _directionReversalHandler;
     private AnimationPlayer _animationPlayer;
@@ -21,6 +26,11 @@ public class Player : MonoBehaviour
         GetComponent<Rigidbody2D>().freezeRotation = true;
 
         _directionReversalHandler = new();
+
+        _rigidbody = GetComponent<Rigidbody2D>();
+
+        _runner = new(_speed);
+        _jumper = new(_jumpingForce);
 
         Animator animator = GetComponent<Animator>();
         _animationPlayer = new(animator);
@@ -64,7 +74,7 @@ public class Player : MonoBehaviour
         if (direction == 0)
             return;
 
-        _jumper.Jump(direction);
+        _jumper.Jump(_rigidbody, direction);
         _animationPlayer.Play(AnimationNames.Jumping);
 
         _isJumping = true;
@@ -72,7 +82,7 @@ public class Player : MonoBehaviour
 
     private void Move(float direction)
     {
-        _runner.Move(direction);
+        _runner.Move(_rigidbody, direction);
 
         if (_isGrounded == false || _isJumping)
             return;
