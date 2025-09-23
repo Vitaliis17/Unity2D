@@ -9,45 +9,25 @@ public class AnimationPlayer
     public AnimationPlayer(Animator animator)
     {
         _animator = animator;
-        _currentAnimation = AnimationNames.Idle;
-
-        SetParameter(true);
-        PlayAnimation();
+        PlayDefault();
     }
 
     public void PlayDefault()
-    {
-        if (_currentAnimation != 0)
-            SetParameter(false);
+        => PlayAnimation(AnimationNames.Idle);
 
-        _currentAnimation = AnimationNames.Idle;
-
-        SetParameter(true);
-        PlayAnimation();
-    }
-
-    public void Play(AnimationNames name = AnimationNames.Idle)
+    public void Play(AnimationNames name)
     {
         if (AnimationParametersPriority.IsMostPriority(name, _currentAnimation) == false)
             return;
 
-        SetParameter(false);
+        PlayAnimation(name);
+    }
 
+    private void PlayAnimation(AnimationNames name)
+    {
         _currentAnimation = name;
 
-        SetParameter(true);
-        PlayAnimation();
-    }
-
-    private void PlayAnimation()
-    {
         int hash = AnimationHashes.GetHashName(_currentAnimation);
         _animator.Play(hash);
-    }
-
-    private void SetParameter(bool isEnabled)
-    {
-        int hash = AnimationHashes.GetHashParameter(_currentAnimation);
-        _animator.SetBool(hash, isEnabled);
     }
 }

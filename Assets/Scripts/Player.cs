@@ -1,17 +1,14 @@
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody2D))]
+[RequireComponent(typeof(Rigidbody2D), typeof(Animator))]
 public class Player : MonoBehaviour
 {
-    [SerializeField] private AxisInputHandler _runningInput;
-    [SerializeField] private AxisInputHandler _jumpingInput;
+    [SerializeField] private AxisInputHandler _input;
 
     [SerializeField] private TriggerHandler _triggerHandler;
 
     [SerializeField] private Runner _runner;
     [SerializeField] private Jumper _jumper;
-
-    [SerializeField] private Animator _animator;
 
     private DirectionReversalHandler _directionReversalHandler;
     private AnimationPlayer _animationPlayer;
@@ -23,38 +20,35 @@ public class Player : MonoBehaviour
     {
         GetComponent<Rigidbody2D>().freezeRotation = true;
 
-        _directionReversalHandler = new(transform.rotation.eulerAngles.y == 0);
-        _animationPlayer = new(_animator);
+        _directionReversalHandler = new();
+
+        Animator animator = GetComponent<Animator>();
+        _animationPlayer = new(animator);
 
         _isJumping = false;
     }
 
     private void OnEnable()
     {
-        _runningInput.Moved += Move;
-        _runningInput.Moved += _directionReversalHandler.UpdateDirectionSigns;
+        _triggerHandler.Triggered += SetGrounded;
+
+        _input.Jumped += Jump;
+        _input.Moved += Move;
+        _input.Moved += _directionReversalHandler.UpdateDirectionSigns;
 
         _directionReversalHandler.DirectionChanged += RotateY;
-
-        _jumpingInput.Moved += Jump;
-
-        _triggerHandler.Triggered += SetGrounded;
     }
 
     private void OnDisable()
     {
-        _runningInput.Moved -= Move;
-        _runningInput.Moved -= _directionReversalHandler.UpdateDirectionSigns;
+        _triggerHandler.Triggered -= SetGrounded;
+
+        _input.Jumped -= Jump;
+        _input.Moved -= Move;
+        _input.Moved -= _directionReversalHandler.UpdateDirectionSigns;
 
         _directionReversalHandler.DirectionChanged -= RotateY;
-
-        _jumpingInput.Moved -= Jump;
-
-        _triggerHandler.Triggered -= SetGrounded;
     }
-
-    private void SetGrounded(bool isGrounded)
-        => _isGrounded = isGrounded;
 
     private void Jump(float direction)
     {
@@ -67,32 +61,29 @@ public class Player : MonoBehaviour
             _animationPlayer.PlayDefault();
         }
 
-        _jumper.Jump(direction);
-
         if (direction == 0)
             return;
 
-        AnimationNames name = AnimationNames.Jumping;
-        _animationPlayer.Play(name);
+        _jumper.Jump(direction);
+        _animationPlayer.Play(AnimationNames.Jumping);
 
         _isJumping = true;
     }
 
     private void Move(float direction)
     {
-        if (direction == 0 && _isGrounded && _isJumping == false)
+        _runner.Move(direction);
+
+        if (_isGrounded == false || _isJumping)
+            return;
+
+        if (direction == 0)
         {
             _animationPlayer.PlayDefault();
             return;
         }
 
-        _runner.Move(direction);
-
-        if (_isGrounded == false)
-            return;
-
-        AnimationNames name = AnimationNames.Running;
-        _animationPlayer.Play(name);
+        _animationPlayer.Play(AnimationNames.Running);
     }
 
     private void RotateY()
@@ -101,4 +92,7 @@ public class Player : MonoBehaviour
 
         transform.Rotate(new(0, AngleAmount));
     }
+
+    private void SetGrounded(bool isGrounded)
+        => _isGrounded = isGrounded;
 }

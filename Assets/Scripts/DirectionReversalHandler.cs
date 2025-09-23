@@ -2,30 +2,26 @@ using System;
 
 public class DirectionReversalHandler 
 {
-    private int _currentDirectionSign;
-
     private bool _isPositiveDirection;
 
     public event Action DirectionChanged;
 
-    public DirectionReversalHandler(bool isPositiveDirection)
+    public DirectionReversalHandler(bool isPositiveDirection = true)
         => _isPositiveDirection = isPositiveDirection;
 
     public void UpdateDirectionSigns(float direction)
     {
-        _currentDirectionSign = Math.Sign(direction);
-
-        if (_currentDirectionSign == 0)
+        if(direction == 0)
             return;
 
-        if(IsSignSwapping())
+        if(IsSignSwapping(direction))
         {
             DirectionChanged?.Invoke();
 
-            _isPositiveDirection = _currentDirectionSign > 0;
+            _isPositiveDirection = _isPositiveDirection == false;
         }
     }
 
-    private bool IsSignSwapping()
-        => _isPositiveDirection != _currentDirectionSign > 0;
+    private bool IsSignSwapping(float direction)
+        => _isPositiveDirection != Math.Sign(direction) > 0;
 }

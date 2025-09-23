@@ -3,20 +3,17 @@ using System;
 
 public class AxisInputHandler : MonoBehaviour
 {
-    [SerializeField] private AxisNames _axis;
+    private Vector2 _direction;
 
-    private float _direction;
-
+    public event Action<float> Jumped;
     public event Action<float> Moved;
 
-    private string _axisName;
-
-    private void Awake()
-        => _axisName = _axis.ToString();
-
     private void Update()
-        => _direction = Input.GetAxis(_axisName);
+        => _direction.Set(Input.GetAxis(nameof(AxisNames.Horizontal)), Input.GetAxis(nameof(AxisNames.Jump)));
 
     private void FixedUpdate()
-        => Moved?.Invoke(_direction);
+    {
+        Moved?.Invoke(_direction.x);
+        Jumped?.Invoke(_direction.y);
+    }
 }
