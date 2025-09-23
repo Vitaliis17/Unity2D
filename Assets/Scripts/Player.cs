@@ -61,7 +61,7 @@ public class Player : MonoBehaviour
         if (_isGrounded == false)
             return;
 
-        if (_isJumping)
+        if (_isJumping && direction == 0)
         {
             _isJumping = false;
             _animationPlayer.PlayDefault();
@@ -80,20 +80,20 @@ public class Player : MonoBehaviour
 
     private void Move(float direction)
     {
-        if (direction == 0)
+        if (direction == 0 && _isGrounded && _isJumping == false)
         {
-            PlayIdle();
+            _animationPlayer.PlayDefault();
             return;
         }
 
         _runner.Move(direction);
 
+        if (_isGrounded == false)
+            return;
+
         AnimationNames name = AnimationNames.Running;
         _animationPlayer.Play(name);
     }
-
-    private void PlayIdle()
-        => _animationPlayer.PlayDefault();
 
     private void RotateY()
     {
