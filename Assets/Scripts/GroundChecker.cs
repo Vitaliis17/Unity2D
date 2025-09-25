@@ -1,8 +1,9 @@
 using System;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 [RequireComponent(typeof(Collider2D))]
-public class TriggerHandler : MonoBehaviour
+public class GroundChecker : MonoBehaviour
 {
     public event Action<bool> Triggered;
 
@@ -10,13 +11,15 @@ public class TriggerHandler : MonoBehaviour
     {
         const bool IsTrigger = true;
 
-        Triggered?.Invoke(IsTrigger);
+        if (collision.TryGetComponent(out TilemapCollider2D _))
+            Triggered?.Invoke(IsTrigger);
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
         const bool NoTrigger = false;
 
-        Triggered?.Invoke(NoTrigger);
+        if (collision.TryGetComponent(out TilemapCollider2D _))
+            Triggered?.Invoke(NoTrigger);
     }
 }

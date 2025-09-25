@@ -1,16 +1,17 @@
 using System.Collections.Generic;
 
-public static class AnimationParametersPriority
+public static class AnimationsPriority
 {
-    private static Dictionary<AnimationNames, int> _animationsPriority;
+    private static readonly Dictionary<AnimationNames, int> _animationsPriority;
 
-    static AnimationParametersPriority()
+    static AnimationsPriority()
     {
         _animationsPriority = new Dictionary<AnimationNames, int>
         {
+            { AnimationNames.Rotation, 1},
             { AnimationNames.Jumping, 1},
             { AnimationNames.Running, 2 },
-            { AnimationNames.Idle, 3 }
+            { AnimationNames.Idle, 3 },
         };
     }
 

@@ -2,22 +2,26 @@ using UnityEngine;
 
 public class AnimationPlayer
 {
-    private Animator _animator;
+    private readonly Animator _animator;
+
+    private readonly AnimationNames _defaultAnimation;
 
     private AnimationNames _currentAnimation;
 
-    public AnimationPlayer(Animator animator)
+    public AnimationPlayer(Animator animator, AnimationNames defaultAnimation)
     {
         _animator = animator;
+        _defaultAnimation = defaultAnimation;
+
         PlayDefault();
     }
 
     public void PlayDefault()
-        => PlayAnimation(AnimationNames.Idle);
+        => PlayAnimation(_defaultAnimation);
 
     public void Play(AnimationNames name)
     {
-        if (AnimationParametersPriority.IsMostPriority(name, _currentAnimation) == false)
+        if (AnimationsPriority.IsMostPriority(name, _currentAnimation) == false)
             return;
 
         PlayAnimation(name);

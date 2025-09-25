@@ -12,10 +12,4 @@ public class Runner
         direction *= _speed * Time.fixedDeltaTime;
         rigidbody.velocity = new(direction, rigidbody.velocity.y);
     }
-
-    public void MoveTowards(Rigidbody2D rigidbody, Transform target)
-    {
-        float nextPositionX = Mathf.MoveTowards(rigidbody.position.x, target.position.x, _speed * Time.fixedDeltaTime);
-        rigidbody.MovePosition(new(nextPositionX, rigidbody.position.y));
-    }
 }

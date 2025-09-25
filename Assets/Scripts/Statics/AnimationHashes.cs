@@ -6,6 +6,8 @@ public static class AnimationHashes
     public static readonly int Running = Animator.StringToHash(nameof(Running));
     public static readonly int Jumping = Animator.StringToHash(nameof(Jumping));
 
+    public static readonly int Rotation = Animator.StringToHash(nameof(Rotation));
+
     public static int GetHashName(AnimationNames name)
     {
         int hash = 0;
@@ -22,6 +24,10 @@ public static class AnimationHashes
 
             case AnimationNames.Jumping:
                 hash = Jumping;
+                break;
+
+            case AnimationNames.Rotation:
+                hash = Rotation;
                 break;
         }
 

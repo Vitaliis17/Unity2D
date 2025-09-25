@@ -5,7 +5,7 @@ public class Player : MonoBehaviour
 {
     [SerializeField] private AxisInputHandler _input;
 
-    [SerializeField] private TriggerHandler _triggerHandler;
+    [SerializeField] private GroundChecker _triggerHandler;
 
     [SerializeField, Min(0)] private float _speed;
     [SerializeField, Min(0)] private float _jumpingForce;
@@ -21,8 +21,12 @@ public class Player : MonoBehaviour
     private bool _isGrounded;
     private bool _isJumping;
 
+    private int _coinAmount;
+
     private void Awake()
     {
+        const AnimationNames DefaultAnimation = AnimationNames.Idle;
+
         GetComponent<Rigidbody2D>().freezeRotation = true;
 
         _directionReversalHandler = new();
@@ -33,7 +37,7 @@ public class Player : MonoBehaviour
         _jumper = new(_jumpingForce);
 
         Animator animator = GetComponent<Animator>();
-        _animationPlayer = new(animator);
+        _animationPlayer = new(animator, DefaultAnimation);
 
         _isJumping = false;
     }
@@ -60,8 +64,22 @@ public class Player : MonoBehaviour
         _directionReversalHandler.DirectionChanged -= RotateY;
     }
 
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.TryGetComponent(out Coin coin))
+            Take(coin);
+    }
+
+    private void Take(Coin coin)
+    {
+        _coinAmount++;
+        Destroy(coin.gameObject);
+    }
+
     private void Jump(float direction)
     {
+        const AnimationNames JumpingAnimation = AnimationNames.Jumping;
+
         if (_isGrounded == false)
             return;
 
@@ -75,13 +93,15 @@ public class Player : MonoBehaviour
             return;
 
         _jumper.Jump(_rigidbody, direction);
-        _animationPlayer.Play(AnimationNames.Jumping);
+        _animationPlayer.Play(JumpingAnimation);
 
         _isJumping = true;
     }
 
     private void Move(float direction)
     {
+        const AnimationNames RunningAnimation = AnimationNames.Running;
+
         _runner.Move(_rigidbody, direction);
 
         if (_isGrounded == false || _isJumping)
@@ -93,7 +113,7 @@ public class Player : MonoBehaviour
             return;
         }
 
-        _animationPlayer.Play(AnimationNames.Running);
+        _animationPlayer.Play(RunningAnimation);
     }
 
     private void RotateY()
