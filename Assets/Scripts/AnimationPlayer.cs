@@ -3,7 +3,6 @@ using UnityEngine;
 public class AnimationPlayer
 {
     private readonly Animator _animator;
-
     private readonly AnimationNames _defaultAnimation;
 
     private AnimationNames _currentAnimation;

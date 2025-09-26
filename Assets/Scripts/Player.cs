@@ -1,43 +1,27 @@
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(Animator))]
-public class Player : MonoBehaviour
+public class Player : Human
 {
-    [SerializeField] private AxisInputHandler _input;
-
-    [SerializeField] private GroundChecker _triggerHandler;
-
-    [SerializeField, Min(0)] private float _speed;
     [SerializeField, Min(0)] private float _jumpingForce;
 
-    private Rigidbody2D _rigidbody;
+    [SerializeField] private AxisInputHandler _input;
+    [SerializeField] private GroundChecker _triggerHandler;
 
-    private Runner _runner;
     private Jumper _jumper;
-
     private DirectionReversalHandler _directionReversalHandler;
-    private AnimationPlayer _animationPlayer;
 
     private bool _isGrounded;
     private bool _isJumping;
 
     private int _coinAmount;
 
-    private void Awake()
+    protected override void Awake()
     {
-        const AnimationNames DefaultAnimation = AnimationNames.Idle;
-
-        GetComponent<Rigidbody2D>().freezeRotation = true;
+        base.Awake();
 
         _directionReversalHandler = new();
-
-        _rigidbody = GetComponent<Rigidbody2D>();
-
-        _runner = new(_speed);
         _jumper = new(_jumpingForce);
-
-        Animator animator = GetComponent<Animator>();
-        _animationPlayer = new(animator, DefaultAnimation);
 
         _isJumping = false;
     }
@@ -86,41 +70,34 @@ public class Player : MonoBehaviour
         if (_isJumping && direction == 0)
         {
             _isJumping = false;
-            _animationPlayer.PlayDefault();
+            Player.PlayDefault();
         }
 
         if (direction == 0)
             return;
 
-        _jumper.Jump(_rigidbody, direction);
-        _animationPlayer.Play(JumpingAnimation);
+        _jumper.Jump(Rigidbody, direction);
+        Player.Play(JumpingAnimation);
 
         _isJumping = true;
     }
 
-    private void Move(float direction)
+    protected override void Move(float direction)
     {
         const AnimationNames RunningAnimation = AnimationNames.Running;
 
-        _runner.Move(_rigidbody, direction);
+        Runner.Move(Rigidbody, direction);
 
         if (_isGrounded == false || _isJumping)
             return;
 
         if (direction == 0)
         {
-            _animationPlayer.PlayDefault();
+            Player.PlayDefault();
             return;
         }
 
-        _animationPlayer.Play(RunningAnimation);
-    }
-
-    private void RotateY()
-    {
-        const int AngleAmount = 180;
-
-        transform.Rotate(new(0, AngleAmount));
+        Player.Play(RunningAnimation);
     }
 
     private void SetGrounded(bool isGrounded)

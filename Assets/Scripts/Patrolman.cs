@@ -1,38 +1,24 @@
 using UnityEngine;
 
 [RequireComponent(typeof(CapsuleCollider2D), typeof(Rigidbody2D), typeof(Animator))]
-public class Patrolman : MonoBehaviour 
+public class Patrolman : Human
 {
-    [SerializeField, Min(0)] private float _speed;
-
     [SerializeField] private Transform[] _targetPoints;
-
-    private Rigidbody2D _rigidbody;
-    private Runner _runner;
-
-    private AnimationPlayer _animationPlayer;
 
     private int _currentTargetIndex;
     private int _directionIndex;
 
     private int _movingDirection;
 
-    private void Awake()
+    protected override void Awake()
     {
-        const AnimationNames DefaultAnimation = AnimationNames.Idle;
         const int PositiveDirection = 1;
 
-        _runner = new(_speed);
+        base.Awake();
 
         _currentTargetIndex = 0;
         _directionIndex = PositiveDirection;
         _movingDirection = PositiveDirection;
-
-        _rigidbody = GetComponent<Rigidbody2D>();
-        _rigidbody.freezeRotation = true;
-
-        Animator animator = GetComponent<Animator>();
-        _animationPlayer = new(animator, DefaultAnimation);
     }
 
     private void FixedUpdate()
@@ -51,19 +37,19 @@ public class Patrolman : MonoBehaviour
             SetNextIndex();
     }
 
-    private void Move(float direction)
+    protected override void Move(float direction)
     {
         const AnimationNames RunningAnimation = AnimationNames.Running;
 
-        _runner.Move(_rigidbody, direction);
+        Runner.Move(Rigidbody, direction);
 
         if (direction == 0)
         {
-            _animationPlayer.PlayDefault();
+            Player.PlayDefault();
             return;
         }
 
-        _animationPlayer.Play(RunningAnimation);
+        Player.Play(RunningAnimation);
     }
 
     private int ReadDirection()
@@ -85,13 +71,6 @@ public class Patrolman : MonoBehaviour
 
         if (_currentTargetIndex == _targetPoints.Length - 1 || _currentTargetIndex == 0)
             ReverseDirectionIndex();
-    }
-
-    private void RotateY()
-    {
-        const int AngleAmount = 180;
-
-        transform.Rotate(new(0, AngleAmount));
     }
 
     private void ReverseDirectionIndex()

@@ -689,10 +689,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 246acf9fd5055dd41b6fb52de10e3ebd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Speed: 180
+  _jumpingForce: 6
   _input: {fileID: 692668156}
   _triggerHandler: {fileID: 101577386}
-  _speed: 180
-  _jumpingForce: 6
 --- !u!1 &692668155
 GameObject:
   m_ObjectHideFlags: 0
