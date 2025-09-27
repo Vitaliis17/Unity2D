@@ -1,7 +1,7 @@
 using UnityEngine;
 using System;
 
-public class AxisInputHandler : MonoBehaviour
+public class InputReader : MonoBehaviour
 {
     private Vector2 _direction;
 

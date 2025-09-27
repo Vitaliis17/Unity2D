@@ -1,20 +1,34 @@
 using UnityEngine;
 
 [RequireComponent(typeof(CapsuleCollider2D), typeof(Rigidbody2D), typeof(Animator))]
-public class Patrolman : Human
+public class Patrolman : MonoBehaviour
 {
+    [SerializeField, Min(0)] private float _speed;
+
     [SerializeField] private Transform[] _targetPoints;
+    [SerializeField] private Flipper _flipper;
+
+    protected Rigidbody2D _rigidbody;
+    protected Runner _runner;
+
+    protected AnimationPlayer _player;
 
     private int _currentTargetIndex;
     private int _directionIndex;
 
     private int _movingDirection;
 
-    protected override void Awake()
+    private void Awake()
     {
         const int PositiveDirection = 1;
 
-        base.Awake();
+        _rigidbody = GetComponent<Rigidbody2D>();
+        _rigidbody.freezeRotation = true;
+
+        _runner = new(_speed);
+
+        Animator animator = GetComponent<Animator>();
+        _player = new(animator, AnimationHashes.Idle);
 
         _currentTargetIndex = 0;
         _directionIndex = PositiveDirection;
@@ -27,7 +41,7 @@ public class Patrolman : Human
 
         if (direction != _movingDirection)
         {
-            RotateY();
+            _flipper.FlipY();
             _movingDirection = direction;
         }
 
@@ -37,19 +51,17 @@ public class Patrolman : Human
             SetNextIndex();
     }
 
-    protected override void Move(float direction)
+    private void Move(float direction)
     {
-        const AnimationNames RunningAnimation = AnimationNames.Running;
-
-        Runner.Move(Rigidbody, direction);
+        _runner.Move(_rigidbody, direction);
 
         if (direction == 0)
         {
-            Player.PlayDefault();
+            _player.PlayDefault();
             return;
         }
 
-        Player.Play(RunningAnimation);
+        _player.Play(AnimationHashes.Running);
     }
 
     private int ReadDirection()

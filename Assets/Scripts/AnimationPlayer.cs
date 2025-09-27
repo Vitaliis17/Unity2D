@@ -3,34 +3,32 @@ using UnityEngine;
 public class AnimationPlayer
 {
     private readonly Animator _animator;
-    private readonly AnimationNames _defaultAnimation;
+    private readonly int _defaultHash;
 
-    private AnimationNames _currentAnimation;
+    private int _currentHash;
 
-    public AnimationPlayer(Animator animator, AnimationNames defaultAnimation)
+    public AnimationPlayer(Animator animator, int defaultHash)
     {
         _animator = animator;
-        _defaultAnimation = defaultAnimation;
+        _defaultHash = defaultHash;
 
         PlayDefault();
     }
 
     public void PlayDefault()
-        => PlayAnimation(_defaultAnimation);
+        => PlayAnimation(_defaultHash);
 
-    public void Play(AnimationNames name)
+    public void Play(int hash)
     {
-        if (AnimationsPriority.IsMostPriority(name, _currentAnimation) == false)
+        if (AnimationsPriority.IsMostPriority(hash, _currentHash) == false)
             return;
 
-        PlayAnimation(name);
+        PlayAnimation(hash);
     }
 
-    private void PlayAnimation(AnimationNames name)
+    private void PlayAnimation(int hash)
     {
-        _currentAnimation = name;
-
-        int hash = AnimationHashes.GetHashName(_currentAnimation);
-        _animator.Play(hash);
+        _currentHash = hash;
+        _animator.Play(_currentHash);
     }
 }

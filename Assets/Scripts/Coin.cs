@@ -8,12 +8,10 @@ public class Coin : MonoBehaviour
 
     private void Awake()
     {
-        const AnimationNames DefaultAnimation = AnimationNames.Rotation;
-
         _circleCollider = GetComponent<CircleCollider2D>();
         _circleCollider.isTrigger = true;
 
         Animator animator = GetComponent<Animator>();
-        _player = new(animator, DefaultAnimation);
+        _player = new(animator, AnimationHashes.Rotation);
     }
 }
