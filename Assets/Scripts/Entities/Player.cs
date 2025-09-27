@@ -9,7 +9,7 @@ public class Player : MonoBehaviour
     [SerializeField] private InputReader _input;
     [SerializeField] private GroundChecker _groundChecker;
     [SerializeField] private Flipper _flipper;
-    [SerializeField] private CoinTaker _coinTaker;
+    [SerializeField] private Collecter _collecter;
 
     private Runner _runner;
     private Jumper _jumper;
@@ -18,8 +18,6 @@ public class Player : MonoBehaviour
 
     private AnimationPlayer _player;
     private Rigidbody2D _rigidbody;
-
-    private bool _isJumping;
 
     private void Awake()
     {
@@ -33,8 +31,6 @@ public class Player : MonoBehaviour
         _player = new(animator, AnimationHashes.Idle);
 
         _directionReversalHandler = new();
-
-        _isJumping = false;
     }
 
     private void OnEnable()
@@ -60,9 +56,9 @@ public class Player : MonoBehaviour
         if (_groundChecker.IsGrounded == false)
             return;
 
-        if (_isJumping && direction == 0)
+        if (_jumper.IsJumping && direction == 0)
         {
-            _isJumping = false;
+            _jumper.StopJumping();
             _player.PlayDefault();
         }
 
@@ -71,15 +67,13 @@ public class Player : MonoBehaviour
 
         _jumper.Jump(_rigidbody, direction);
         _player.Play(AnimationHashes.Jumping);
-
-        _isJumping = true;
     }
 
     private void Move(float direction)
     {
         _runner.Move(_rigidbody, direction);
 
-        if (_groundChecker.IsGrounded == false || _isJumping)
+        if (_groundChecker.IsGrounded == false || _jumper.IsJumping)
             return;
 
         if (direction == 0)
