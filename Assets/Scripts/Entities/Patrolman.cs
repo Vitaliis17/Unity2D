@@ -7,11 +7,12 @@ public class Patrolman : MonoBehaviour
 
     [SerializeField] private Transform[] _targetPoints;
     [SerializeField] private Flipper _flipper;
+    [SerializeField] private Health _health;
 
-    protected Rigidbody2D _rigidbody;
-    protected Runner _runner;
+    private Rigidbody2D _rigidbody;
+    private Runner _runner;
 
-    protected AnimationPlayer _player;
+    private AnimationPlayer _player;
 
     private int _currentTargetIndex;
     private int _directionIndex;
@@ -28,7 +29,7 @@ public class Patrolman : MonoBehaviour
         _runner = new(_speed);
 
         Animator animator = GetComponent<Animator>();
-        _player = new(animator, AnimationHashes.Idle);
+        _player = new(animator);
 
         _currentTargetIndex = 0;
         _directionIndex = PositiveDirection;
@@ -57,11 +58,11 @@ public class Patrolman : MonoBehaviour
 
         if (direction == 0)
         {
-            _player.PlayDefault();
+            //_player.PlayDefault();
             return;
         }
 
-        _player.Play(AnimationHashes.Running);
+        _player.Play(AnimationHashes.Running, ParameterHashes.IsRunning);
     }
 
     private int ReadDirection()

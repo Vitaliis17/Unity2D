@@ -1,5 +1,6 @@
 public enum AxisNames
 {
     Horizontal,
-    Jump
+    Jump,
+    Fire1
 }

@@ -9,9 +9,11 @@ public static class AnimationsPriority
         _animationsPriority = new Dictionary<int, int>
         {
             { AnimationHashes.Rotation, 1},
-            { AnimationHashes.Jumping, 1},
-            { AnimationHashes.Running, 2 },
-            { AnimationHashes.Idle, 3 },
+            { AnimationHashes.Attacking, 1},
+            { AnimationHashes.StartingJumping, 2},
+            { AnimationHashes.EndingJumping, 2},
+            { AnimationHashes.Running, 3 },
+            { AnimationHashes.Idle, 4 }
         };
     }
 
