@@ -80,7 +80,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a92b6424827bf5c488a5eed53ca0a0d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _maxEnemyAmount: 1
   _layer:
     serializedVersion: 2
     m_Bits: 64
@@ -121,7 +120,7 @@ Transform:
   m_Children:
   - {fileID: 5399244779668421846}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &8048774834921673263
 SpriteRenderer:
@@ -250,11 +249,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _speed: 150
+  _damage: 25
   _targetPoints:
   - {fileID: 0}
   - {fileID: 0}
   _flipper: {fileID: 4677712286216286165}
   _health: {fileID: 4634624931410683850}
+  _attackChecker: {fileID: 785800264617285291}
 --- !u!95 &8586788608228662843
 Animator:
   serializedVersion: 5
@@ -300,4 +301,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e254ed25aaff4754197061d0e87c4129, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _maxHealth: 29
+  _maxHealth: 100

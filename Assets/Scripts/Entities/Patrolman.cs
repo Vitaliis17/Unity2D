@@ -4,20 +4,26 @@ using UnityEngine;
 public class Patrolman : MonoBehaviour
 {
     [SerializeField, Min(0)] private float _speed;
+    [SerializeField, Min(0)] private int _damage;
 
     [SerializeField] private Transform[] _targetPoints;
     [SerializeField] private Flipper _flipper;
     [SerializeField] private Health _health;
+    [SerializeField] private AttackChecker _attackChecker;
 
     private Rigidbody2D _rigidbody;
     private Runner _runner;
+    private Attacker _attacker;
+    private Timer _timer;
 
-    private AnimationPlayer _player;
+    private AnimationPlayer _animationPlayer;
 
     private int _currentTargetIndex;
     private int _directionIndex;
 
     private int _movingDirection;
+
+    private Coroutine _coroutine;
 
     private void Awake()
     {
@@ -27,13 +33,30 @@ public class Patrolman : MonoBehaviour
         _rigidbody.freezeRotation = true;
 
         _runner = new(_speed);
+        _attacker = new(_damage);
+        _timer = new();
 
         Animator animator = GetComponent<Animator>();
-        _player = new(animator);
+        _animationPlayer = new(animator);
 
         _currentTargetIndex = 0;
         _directionIndex = PositiveDirection;
         _movingDirection = PositiveDirection;
+
+        if (_targetPoints.Length == 0)
+            _animationPlayer.SetDefault();
+    }
+
+    private void OnEnable()
+    {
+        _attackChecker.OnPlayerTriggered += Attack;
+        _timer.TimePassed += _animationPlayer.SetDefault;
+    }
+
+    private void OnDisable()
+    {
+        _attackChecker.OnPlayerTriggered -= Attack;
+        _timer.TimePassed -= _animationPlayer.SetDefault;
     }
 
     private void FixedUpdate()
@@ -56,13 +79,19 @@ public class Patrolman : MonoBehaviour
     {
         _runner.Move(_rigidbody, direction);
 
-        if (direction == 0)
-        {
-            //_player.PlayDefault();
-            return;
-        }
+        _animationPlayer.Play(AnimationHashes.Running, ParameterHashes.IsRunning);
+    }
 
-        _player.Play(AnimationHashes.Running, ParameterHashes.IsRunning);
+    private void Attack(Player player)
+    {
+        if (_animationPlayer.GetParameter(ParameterHashes.IsAttacking))
+            return;
+
+        _animationPlayer.Play(AnimationHashes.Attacking, ParameterHashes.IsAttacking);
+
+        _attacker.Attack(player.GetComponent<Health>());
+
+        StartTimer();
     }
 
     private int ReadDirection()
@@ -91,5 +120,15 @@ public class Patrolman : MonoBehaviour
         const int ReversingMultiply = -1;
 
         _directionIndex *= ReversingMultiply;
+    }
+
+    private void StartTimer()
+    {
+        float time = _animationPlayer.GetCurrentAnimationLength();
+
+        if (_coroutine != null)
+            StopCoroutine(_coroutine);
+
+        _coroutine = StartCoroutine(_timer.Wait(time));
     }
 }
