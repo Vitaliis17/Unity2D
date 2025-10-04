@@ -425,7 +425,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a92b6424827bf5c488a5eed53ca0a0d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _maxEnemyAmount: 2
   _layer:
     serializedVersion: 2
     m_Bits: 128
@@ -779,8 +778,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _speed: 180
   _jumpingForce: 6
-  _damage: 30
-  _input: {fileID: 692668158}
+  _damage: 50
+  _inputAxis: {fileID: 692668159}
+  _clickButtonsHandler: {fileID: 692668158}
   _groundChecker: {fileID: 101577386}
   _attackChecker: {fileID: 407112368}
   _flipper: {fileID: 526811724}
@@ -832,6 +832,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 692668157}
+  - component: {fileID: 692668159}
   - component: {fileID: 692668158}
   m_Layer: 0
   m_Name: InputHandler
@@ -864,7 +865,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 692668155}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 822287ca63aa6fb4f9262404f8523975, type: 3}
+  m_Script: {fileID: 11500000, guid: 5114ecffb91e49041a34c3c5eb530cdf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &692668159
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 692668155}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dbf45c41ecebed44493e245905e040ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &712928160
@@ -7415,8 +7428,7 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 2988141964679818257, guid: fbeca6996d740c94ab14dfc3ded47428, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
