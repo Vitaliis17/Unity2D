@@ -23,8 +23,8 @@ public class ZoneChecker : MonoBehaviour
     }
 
     public Collider2D[] ReadEnemies()
-        => Physics2D.OverlapCapsuleAll(_collider.transform.position, _collider.size, _collider.direction, 0f, _layer);
+        => Physics2D.OverlapCapsuleAll((Vector2)_collider.transform.position + _collider.offset, _collider.size, _collider.direction, 0f, _layer);
 
     public Collider2D ReadEnemy()
-        => Physics2D.OverlapCapsule(_collider.transform.position, _collider.size, _collider.direction, 0f, _layer);
+        => Physics2D.OverlapCapsule((Vector2)_collider.transform.position + _collider.offset, _collider.size, _collider.direction, 0f, _layer);
 }

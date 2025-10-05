@@ -45,9 +45,6 @@ public class Patrolman : MonoBehaviour
         _currentTargetIndex = 0;
         _directionIndex = PositiveDirection;
         _movingDirection = PositiveDirection;
-
-        if (_targetPoints.Length == 0)
-            _animationPlayer.SetDefault();
     }
 
     private void OnEnable()
@@ -64,7 +61,7 @@ public class Patrolman : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Transform target = ReadEnemy();
+        Transform target = _viewChecker.ReadEnemy()?.transform;
 
         if (target == null)
             target = _targetPoints[_currentTargetIndex];
@@ -82,9 +79,6 @@ public class Patrolman : MonoBehaviour
         if (_enemy == null && IsReached(_targetPoints[_currentTargetIndex]))
             SetNextIndex();
     }
-
-    private Transform ReadEnemy()
-        => _viewChecker.ReadEnemy()?.transform;
 
     private void Move(float direction)
     {
