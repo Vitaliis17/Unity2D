@@ -9,7 +9,8 @@ public class Patrolman : MonoBehaviour
     [SerializeField] private Transform[] _targetPoints;
     [SerializeField] private Flipper _flipper;
     [SerializeField] private Health _health;
-    [SerializeField] private AttackChecker _attackChecker;
+    [SerializeField] private ZoneChecker _attackChecker;
+    [SerializeField] private ZoneChecker _viewChecker;
 
     private Rigidbody2D _rigidbody;
     private Runner _runner;
@@ -17,6 +18,8 @@ public class Patrolman : MonoBehaviour
     private Timer _timer;
 
     private AnimationPlayer _animationPlayer;
+
+    private Player _enemy;
 
     private int _currentTargetIndex;
     private int _directionIndex;
@@ -61,7 +64,12 @@ public class Patrolman : MonoBehaviour
 
     private void FixedUpdate()
     {
-        int direction = ReadDirection();
+        Transform target = ReadEnemy();
+
+        if (target == null)
+            target = _targetPoints[_currentTargetIndex];
+
+        int direction = ReadDirection(target);
 
         if (direction != _movingDirection)
         {
@@ -71,9 +79,12 @@ public class Patrolman : MonoBehaviour
 
         Move(direction);
 
-        if (IsReached(_targetPoints[_currentTargetIndex]))
+        if (_enemy == null && IsReached(_targetPoints[_currentTargetIndex]))
             SetNextIndex();
     }
+
+    private Transform ReadEnemy()
+        => _viewChecker.ReadEnemy()?.transform;
 
     private void Move(float direction)
     {
@@ -94,9 +105,9 @@ public class Patrolman : MonoBehaviour
         StartTimer();
     }
 
-    private int ReadDirection()
+    private int ReadDirection(Transform target)
     {
-        float difference = _targetPoints[_currentTargetIndex].transform.position.x - transform.position.x;
+        float difference = target.transform.position.x - transform.position.x;
         return (int)Mathf.Sign(difference);
     }
 

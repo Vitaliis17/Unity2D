@@ -12,7 +12,7 @@ public class Player : MonoBehaviour
     [SerializeField] private ClickButtonsHandler _clickButtonsHandler;
 
     [SerializeField] private GroundChecker _groundChecker;
-    [SerializeField] private AttackChecker _attackChecker;
+    [SerializeField] private ZoneChecker _attackChecker;
 
     [SerializeField] private Flipper _flipper;
     [SerializeField] private Collecter _collecter;

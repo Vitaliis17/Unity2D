@@ -2,7 +2,7 @@ using UnityEngine;
 using System;
 
 [RequireComponent(typeof(CapsuleCollider2D))]
-public class AttackChecker : MonoBehaviour
+public class ZoneChecker : MonoBehaviour
 {
     [SerializeField] private LayerMask _layer;
 
@@ -25,4 +25,6 @@ public class AttackChecker : MonoBehaviour
     public Collider2D[] ReadEnemies()
         => Physics2D.OverlapCapsuleAll(_collider.transform.position, _collider.size, _collider.direction, 0f, _layer);
 
+    public Collider2D ReadEnemy()
+        => Physics2D.OverlapCapsule(_collider.transform.position, _collider.size, _collider.direction, 0f, _layer);
 }

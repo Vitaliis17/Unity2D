@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5399244779668421846}
   - component: {fileID: 1443087917519689109}
-  - component: {fileID: 785800264617285291}
+  - component: {fileID: 4043771908199275672}
   m_Layer: 0
   m_Name: AttackRange
   m_TagString: Untagged
@@ -65,10 +65,10 @@ CapsuleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.42, y: -0.000000025025571}
-  m_Size: {x: 1.3987362, y: 1.3987362}
-  m_Direction: 1
---- !u!114 &785800264617285291
+  m_Offset: {x: 0.66282886, y: -0.000000049670536}
+  m_Size: {x: 0.98439413, y: 1.3987364}
+  m_Direction: 0
+--- !u!114 &4043771908199275672
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -77,7 +77,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 872142511808397732}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a92b6424827bf5c488a5eed53ca0a0d8, type: 3}
+  m_Script: {fileID: 11500000, guid: 5a8a8957b550e2a4c87db08a11974528, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _layer:
@@ -95,8 +95,8 @@ GameObject:
   - component: {fileID: 8048774834921673263}
   - component: {fileID: 2832007702546262172}
   - component: {fileID: 7543140657448383064}
-  - component: {fileID: 4577030823034919532}
   - component: {fileID: 8586788608228662843}
+  - component: {fileID: 4577030823034919532}
   - component: {fileID: 4677712286216286165}
   - component: {fileID: 4634624931410683850}
   m_Layer: 7
@@ -119,8 +119,9 @@ Transform:
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 5399244779668421846}
+  - {fileID: 3356426389498115097}
   m_Father: {fileID: 0}
-  m_RootOrder: -1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &8048774834921673263
 SpriteRenderer:
@@ -206,8 +207,8 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.00572297, y: -0.1323115}
-  m_Size: {x: 0.561057, y: 1.805437}
+  m_Offset: {x: 0.018166304, y: -0.13231148}
+  m_Size: {x: 0.75217164, y: 1.805437}
   m_Direction: 0
 --- !u!50 &7543140657448383064
 Rigidbody2D:
@@ -236,26 +237,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &4577030823034919532
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 951829252202420038}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5ff126b0e39bddf4a9ec325f03512b35, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _speed: 150
-  _damage: 25
-  _targetPoints:
-  - {fileID: 0}
-  - {fileID: 0}
-  _flipper: {fileID: 4677712286216286165}
-  _health: {fileID: 4634624931410683850}
-  _attackChecker: {fileID: 785800264617285291}
 --- !u!95 &8586788608228662843
 Animator:
   serializedVersion: 5
@@ -277,6 +258,27 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &4577030823034919532
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 951829252202420038}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ff126b0e39bddf4a9ec325f03512b35, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _speed: 150
+  _damage: 25
+  _targetPoints:
+  - {fileID: 0}
+  - {fileID: 0}
+  _flipper: {fileID: 4677712286216286165}
+  _health: {fileID: 4634624931410683850}
+  _attackChecker: {fileID: 4043771908199275672}
+  _viewChecker: {fileID: 3144959827511769710}
 --- !u!114 &4677712286216286165
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -302,3 +304,86 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _maxHealth: 100
+--- !u!1 &4423501138647074755
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3356426389498115097}
+  - component: {fileID: 214928130938206780}
+  - component: {fileID: 3144959827511769710}
+  m_Layer: 0
+  m_Name: ViewRange
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3356426389498115097
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4423501138647074755}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5718757700345164008}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!70 &214928130938206780
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4423501138647074755}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 2.8813198, y: 0.27340737}
+  m_Size: {x: 5.8358207, y: 3.008029}
+  m_Direction: 1
+--- !u!114 &3144959827511769710
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4423501138647074755}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a8a8957b550e2a4c87db08a11974528, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _layer:
+    serializedVersion: 2
+    m_Bits: 64
