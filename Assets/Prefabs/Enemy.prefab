@@ -121,7 +121,7 @@ Transform:
   - {fileID: 5399244779668421846}
   - {fileID: 3356426389498115097}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &8048774834921673263
 SpriteRenderer:
@@ -303,7 +303,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e254ed25aaff4754197061d0e87c4129, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _maxHealth: 100
+  _maxHealthAmount: 100
 --- !u!1 &4423501138647074755
 GameObject:
   m_ObjectHideFlags: 0
