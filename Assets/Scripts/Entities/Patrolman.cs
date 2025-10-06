@@ -77,7 +77,9 @@ public class Patrolman : MonoBehaviour
         Move(direction);
 
         if (_enemy == null && IsReached(_targetPoints[_currentTargetIndex]))
+        {
             SetNextIndex();
+        }
     }
 
     private void Move(float direction)
@@ -107,7 +109,7 @@ public class Patrolman : MonoBehaviour
 
     private bool IsReached(Transform target)
     {
-        const float Offset = 0.1f;
+        const float Offset = 0.2f;
 
         return (transform.position - target.position).sqrMagnitude < Offset;
     }

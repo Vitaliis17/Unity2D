@@ -9,8 +9,8 @@ public static class ParametersPriority
         _parametersPriority = new Dictionary<int, int>
         {
             { ParameterHashes.IsAttacking, 1},
-            { ParameterHashes.IsLanding, 2 },
-            { ParameterHashes.IsJumping, 3 },
+            { ParameterHashes.IsJumping, 2 },
+            { ParameterHashes.IsLanding, 3 },
             { ParameterHashes.IsFalling, 4 },
             { ParameterHashes.IsRunning, 5 },
             { ParameterHashes.IsIdle, 6 }
