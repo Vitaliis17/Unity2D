@@ -2,19 +2,23 @@ using UnityEngine;
 
 public class Health : MonoBehaviour
 {
-    [SerializeField, Min(0)] private int _maxHealthAmount;
+    private const int _minValue = 0;
 
-    private int _currentHealthAmount;
+    [SerializeField, Min(_minValue)] private int _maxValue;
+
+    private int _currentValue;
 
     private void Awake()
-        => _currentHealthAmount = _maxHealthAmount;
+        => _currentValue = _maxValue;
 
     public void TakeDamage(int damage)
     {
+        const int DamageCoefficient = -1;
+
         if (damage <= 0)
             return;
 
-        _currentHealthAmount -= damage;
+        TakeHealing(damage * DamageCoefficient);
 
         if(IsDead())
             Destroy(gameObject);
@@ -25,14 +29,12 @@ public class Health : MonoBehaviour
         if(healingAmount <= 0) 
             return;
 
-        int nextHealthAmount = _currentHealthAmount + healingAmount;
-
-        if(nextHealthAmount > _maxHealthAmount)
-            nextHealthAmount = _maxHealthAmount;
-
-        _currentHealthAmount = nextHealthAmount;
+        TakeHealing(healingAmount);
     }
 
+    private void TakeHealing(int addingValue)
+        => _currentValue = Mathf.Clamp(_currentValue + addingValue, _minValue, _maxValue);
+
     private bool IsDead()
-        => _currentHealthAmount <= 0;
+        => _currentValue <= _minValue;
 }

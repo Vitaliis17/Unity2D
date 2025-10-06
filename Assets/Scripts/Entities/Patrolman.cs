@@ -77,9 +77,7 @@ public class Patrolman : MonoBehaviour
         Move(direction);
 
         if (_enemy == null && IsReached(_targetPoints[_currentTargetIndex]))
-        {
             SetNextIndex();
-        }
     }
 
     private void Move(float direction)

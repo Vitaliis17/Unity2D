@@ -3,7 +3,7 @@ using UnityEngine;
 [RequireComponent(typeof(Collider2D))]
 public class Medkit : MonoBehaviour
 {
-    [SerializeField, Min(0)] private int _healthAmount;
+    [SerializeField, Min(0)] private int _healingHealthAmount;
 
     private void Awake()
         => GetComponent<Collider2D>().isTrigger = true;
@@ -13,7 +13,7 @@ public class Medkit : MonoBehaviour
         if (collision.TryGetComponent(out Health health) == false)
             return;
 
-        health.Heal(_healthAmount);
+        health.Heal(_healingHealthAmount);
         Destroy(gameObject);
     }
 }

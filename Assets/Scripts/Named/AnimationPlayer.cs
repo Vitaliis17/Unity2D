@@ -40,8 +40,11 @@ public class AnimationPlayer
         _currentAnimationHash = _defaultAnimationHash;
     }
 
-    public void SetGrounded(bool grounded)
-        => _animator.SetBool(ParameterHashes.IsGrounded, grounded);
+    public void ActivateGrounded()
+        => _animator.SetBool(ParameterHashes.IsGrounded, true);
+
+    public void DeactivateGrounded()
+        => _animator.SetBool(ParameterHashes.IsGrounded, false);
 
     public bool GetParameter(int hash)
         => _animator.GetBool(hash);

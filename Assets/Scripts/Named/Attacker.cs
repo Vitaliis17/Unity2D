@@ -1,5 +1,3 @@
-using UnityEngine;
-
 public class Attacker 
 {
     private readonly int _damage;

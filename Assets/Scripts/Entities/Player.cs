@@ -49,7 +49,8 @@ public class Player : MonoBehaviour
 
     private void OnEnable()
     {
-        _groundChecker.Triggered += SetGrounded;
+        _groundChecker.TriggerEntered += ActivateGrounded;
+        _groundChecker.TriggerExited += DeactivateGrounded;
 
         _clickButtonsHandler.LeftMouseButtonPressed += Attack;
         _inputAxis.Jumped += Jump;
@@ -62,7 +63,8 @@ public class Player : MonoBehaviour
 
     private void OnDisable()
     {
-        _groundChecker.Triggered -= SetGrounded;
+        _groundChecker.TriggerEntered -= ActivateGrounded;
+        _groundChecker.TriggerExited -= DeactivateGrounded;
 
         _clickButtonsHandler.LeftMouseButtonPressed -= Attack;
         _inputAxis.Jumped -= Jump;
@@ -110,19 +112,18 @@ public class Player : MonoBehaviour
         StartTimer();
     }
 
-    private void SetGrounded(bool isGrounded)
+    private void ActivateGrounded()
     {
-        if (isGrounded)
-        {
-            _animationPlayer.Play(AnimationHashes.Landing, ParameterHashes.IsLanding);
-            StartTimer();
-        }
-        else
-        {
-            _animationPlayer.Play(AnimationHashes.Falling, ParameterHashes.IsFalling);
-        }
+        _animationPlayer.ActivateGrounded();
 
-        _animationPlayer.SetGrounded(isGrounded);
+        _animationPlayer.Play(AnimationHashes.Landing, ParameterHashes.IsLanding);
+        StartTimer();
+    }
+
+    private void DeactivateGrounded()
+    {
+        _animationPlayer.DeactivateGrounded();
+        _animationPlayer.Play(AnimationHashes.Falling, ParameterHashes.IsFalling);
     }
 
     private void StartTimer()
