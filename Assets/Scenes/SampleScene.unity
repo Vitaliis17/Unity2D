@@ -321,7 +321,7 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: -1}
-  m_Size: {x: 0.42136323, y: 0.16711392}
+  m_Size: {x: 0.4213632, y: 0.16711392}
   m_Direction: 1
 --- !u!114 &101577386
 MonoBehaviour:
@@ -332,7 +332,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 101577383}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a0522a2176e738448494bb06d2a6417, type: 3}
+  m_Script: {fileID: 11500000, guid: 6aaf626f7ef2dec4db7307c13b1f05cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _layer:
@@ -7503,6 +7503,18 @@ PrefabInstance:
     - target: {fileID: 951829252202420038, guid: fbeca6996d740c94ab14dfc3ded47428, type: 3}
       propertyPath: m_Name
       value: Enemy
+      objectReference: {fileID: 0}
+    - target: {fileID: 951829252202420038, guid: fbeca6996d740c94ab14dfc3ded47428, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1443087917519689109, guid: fbeca6996d740c94ab14dfc3ded47428, type: 3}
+      propertyPath: m_Offset.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4423501138647074755, guid: fbeca6996d740c94ab14dfc3ded47428, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4577030823034919532, guid: fbeca6996d740c94ab14dfc3ded47428, type: 3}
       propertyPath: _targetPoints.Array.data[0]

@@ -48,20 +48,19 @@ public class Patrolman : MonoBehaviour
     }
 
     private void OnEnable()
-    {
-        _attackChecker.OnPlayerTriggered += Attack;
-        _timer.TimePassed += _animationPlayer.SetDefault;
-    }
+        => _timer.TimePassed += _animationPlayer.SetDefault;
 
     private void OnDisable()
-    {
-        _attackChecker.OnPlayerTriggered -= Attack;
-        _timer.TimePassed -= _animationPlayer.SetDefault;
-    }
+        => _timer.TimePassed -= _animationPlayer.SetDefault;
 
     private void FixedUpdate()
     {
-        Transform target = _viewChecker.ReadEnemy()?.transform;
+        Collider2D playerCollider = _attackChecker.ReadCollider();
+
+        if (playerCollider)
+            Attack(playerCollider.GetComponent<Player>());
+
+        Transform target = _viewChecker.ReadCollider()?.transform;
 
         if (target == null)
             target = _targetPoints[_currentTargetIndex];

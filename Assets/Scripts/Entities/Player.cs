@@ -11,7 +11,7 @@ public class Player : MonoBehaviour
     [SerializeField] private InputAxisReader _inputAxis;
     [SerializeField] private ClickButtonsHandler _clickButtonsHandler;
 
-    [SerializeField] private GroundChecker _groundChecker;
+    [SerializeField] private ZoneChecker _groundChecker;
     [SerializeField] private ZoneChecker _attackChecker;
 
     [SerializeField] private Flipper _flipper;
@@ -101,7 +101,7 @@ public class Player : MonoBehaviour
 
         _animationPlayer.Play(AnimationHashes.Attacking, ParameterHashes.IsAttacking);
 
-        Collider2D[] colliders = _attackChecker.ReadEnemies();
+        Collider2D[] colliders = _attackChecker.ReadColliders();
 
         for (int i = 0; i < colliders.Length; i++)
             _attacker.Attack(colliders[i].GetComponent<Health>());
@@ -111,10 +111,12 @@ public class Player : MonoBehaviour
 
     private void SetGroundedState()
     {
-        if (_animationPlayer.GetParameter(ParameterHashes.IsGrounded) == _groundChecker.IsGrounded)
+        bool isGrounded = _groundChecker.ReadCollider();
+
+        if (_animationPlayer.GetParameter(ParameterHashes.IsGrounded) == isGrounded)
             return;
 
-        if (_groundChecker.IsGrounded)
+        if (isGrounded)
             ActivateGrounded();
         else
             DeactivateGrounded();
