@@ -49,9 +49,6 @@ public class Player : MonoBehaviour
 
     private void OnEnable()
     {
-        _groundChecker.TriggerEntered += ActivateGrounded;
-        _groundChecker.TriggerExited += DeactivateGrounded;
-
         _clickButtonsHandler.LeftMouseButtonPressed += Attack;
         _inputAxis.Jumped += Jump;
         _inputAxis.Moved += Move;
@@ -61,11 +58,11 @@ public class Player : MonoBehaviour
         _directionReversalHandler.DirectionChanged += _flipper.FlipY;
     }
 
+    private void FixedUpdate()
+        => SetGroundedState();
+
     private void OnDisable()
     {
-        _groundChecker.TriggerEntered -= ActivateGrounded;
-        _groundChecker.TriggerExited -= DeactivateGrounded;
-
         _clickButtonsHandler.LeftMouseButtonPressed -= Attack;
         _inputAxis.Jumped -= Jump;
         _inputAxis.Moved -= Move;
@@ -110,6 +107,17 @@ public class Player : MonoBehaviour
             _attacker.Attack(colliders[i].GetComponent<Health>());
 
         StartTimer();
+    }
+
+    private void SetGroundedState()
+    {
+        if (_animationPlayer.GetParameter(ParameterHashes.IsGrounded) == _groundChecker.IsGrounded)
+            return;
+
+        if (_groundChecker.IsGrounded)
+            ActivateGrounded();
+        else
+            DeactivateGrounded();
     }
 
     private void ActivateGrounded()

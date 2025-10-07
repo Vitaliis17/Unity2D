@@ -320,7 +320,7 @@ CapsuleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.005022198, y: -0.99584514}
+  m_Offset: {x: 0, y: -1}
   m_Size: {x: 0.42136323, y: 0.16711392}
   m_Direction: 1
 --- !u!114 &101577386
@@ -335,6 +335,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a0522a2176e738448494bb06d2a6417, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _layer:
+    serializedVersion: 2
+    m_Bits: 8
 --- !u!4 &199678424 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5479068985303259708, guid: f7fbc24a40dadb545a996be239f81ead, type: 3}
@@ -822,7 +825,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e254ed25aaff4754197061d0e87c4129, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _maxHealthAmount: 100
+  _maxValue: 100
 --- !u!1 &692668155
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.Tilemaps;
 using System;
 
 [RequireComponent(typeof(CapsuleCollider2D))]
@@ -8,10 +7,8 @@ public class GroundChecker : MonoBehaviour
     [SerializeField] private LayerMask _layer;
 
     private CapsuleCollider2D _collider;
-    private int _triggerAmount;
 
-    public event Action TriggerEntered;
-    public event Action TriggerExited;
+    public bool IsGrounded { get; private set; }
 
     private void Awake()
     {
@@ -19,31 +16,9 @@ public class GroundChecker : MonoBehaviour
         _collider.isTrigger = true;
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.TryGetComponent(out TilemapCollider2D _) == false)
-            return;
-
-        if (IsNoTrigger())
-            TriggerEntered?.Invoke();
-
-        _triggerAmount++;
-    }
-
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        if (collision.TryGetComponent(out TilemapCollider2D _) == false)
-            return;
-
-        _triggerAmount--;
-
-        if (IsNoTrigger())
-            TriggerExited?.Invoke();
-    }
+    private void FixedUpdate()
+        => IsGrounded = IsTriggered();
 
     public bool IsTriggered()
-        => Physics2D.OverlapCapsule(_collider.transform.position, _collider.size, _collider.direction, 0f, _layer);
-
-    private bool IsNoTrigger()
-        => _triggerAmount == 0;
+        => Physics2D.OverlapCapsule((Vector2)_collider.transform.position + _collider.offset, _collider.size, _collider.direction, 0f, _layer);
 }

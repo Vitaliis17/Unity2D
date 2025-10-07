@@ -303,7 +303,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e254ed25aaff4754197061d0e87c4129, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _maxHealthAmount: 100
+  _maxValue: 100
 --- !u!1 &4423501138647074755
 GameObject:
   m_ObjectHideFlags: 0
