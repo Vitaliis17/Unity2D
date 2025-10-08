@@ -9,7 +9,7 @@ public class Coin : MonoBehaviour
 
     private void Awake()
     {
-        _collider = GetComponent<CircleCollider2D>();
+        _collider = GetComponent<Collider2D>();
         _collider.isTrigger = true;
     }
 }

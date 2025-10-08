@@ -57,8 +57,8 @@ public class Patrolman : MonoBehaviour
     {
         Collider2D playerCollider = _attackChecker.ReadCollider();
 
-        if (playerCollider)
-            Attack(playerCollider.GetComponent<Player>());
+        if (playerCollider && playerCollider.TryGetComponent(out Player player))
+            Attack(player);
 
         Transform target = _viewChecker.ReadCollider()?.transform;
 
@@ -93,7 +93,8 @@ public class Patrolman : MonoBehaviour
 
         _animationPlayer.Play(AnimationHashes.Attacking, ParameterHashes.IsAttacking);
 
-        _attacker.Attack(player.GetComponent<Health>());
+        if (player.TryGetComponent(out Health health))
+            _attacker.Attack(health);
 
         StartTimer();
     }

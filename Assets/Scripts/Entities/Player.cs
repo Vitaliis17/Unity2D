@@ -15,12 +15,9 @@ public class Player : MonoBehaviour
     [SerializeField] private ZoneChecker _attackChecker;
     [SerializeField] private ZoneChecker _itemChecker;
 
-    [SerializeField] private Flipper _flipper;
-
-    [SerializeField] private Collecter _collecter;
     [SerializeField] private ItemTaker _taker;
 
-    [SerializeField] private Health _health;
+    [SerializeField] private Flipper _flipper;
 
     private Runner _runner;
     private Jumper _jumper;
@@ -110,7 +107,10 @@ public class Player : MonoBehaviour
         Collider2D[] colliders = _attackChecker.ReadColliders();
 
         for (int i = 0; i < colliders.Length; i++)
-            _attacker.Attack(colliders[i].GetComponent<Health>());
+        {
+            if (colliders[i].TryGetComponent(out Health health))
+                _attacker.Attack(health);
+        }
 
         StartTimer();
     }
