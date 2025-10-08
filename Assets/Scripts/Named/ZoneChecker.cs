@@ -8,10 +8,7 @@ public class ZoneChecker : MonoBehaviour
     private CapsuleCollider2D _collider;
 
     private void Awake()
-    {
-        _collider = GetComponent<CapsuleCollider2D>();
-        _collider.isTrigger = true;
-    }
+        => _collider = GetComponent<CapsuleCollider2D>();
 
     public Collider2D[] ReadColliders()
         => Physics2D.OverlapCapsuleAll(ReadPoint(), _collider.size, _collider.direction, 0f, _layer);

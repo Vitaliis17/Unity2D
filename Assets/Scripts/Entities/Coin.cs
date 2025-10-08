@@ -1,13 +1,15 @@
 using UnityEngine;
 
-[RequireComponent(typeof(CircleCollider2D))]
+[RequireComponent(typeof(Collider2D))]
 public class Coin : MonoBehaviour
 {
-    private CircleCollider2D _circleCollider;
+    [field: SerializeField, Min(0)] public int PointAmount;
+
+    private Collider2D _collider;
 
     private void Awake()
     {
-        _circleCollider = GetComponent<CircleCollider2D>();
-        _circleCollider.isTrigger = true;
+        _collider = GetComponent<CircleCollider2D>();
+        _collider.isTrigger = true;
     }
 }

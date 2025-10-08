@@ -1,19 +1,12 @@
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody2D), typeof(Collider2D))]
 public class Collecter : MonoBehaviour
 {
     private int _coinAmount;
 
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.TryGetComponent(out Coin coin))
-            Take(coin);
-    }
+    private void Awake()
+        => _coinAmount = 0;
 
-    private void Take(Coin coin)
-    {
-        _coinAmount++;
-        Destroy(coin.gameObject);
-    }
+    public void Take(Coin coin)
+        => _coinAmount += coin.PointAmount;
 }

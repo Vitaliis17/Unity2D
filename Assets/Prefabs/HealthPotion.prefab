@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6658789690119706142}
   - component: {fileID: 3120329024601631015}
   - component: {fileID: 7168484136502655747}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: HealthPotion
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -133,4 +133,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80a624966427dd04f8f19b80c18b53d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _healthAmount: 50
+  <HealingHealthAmount>k__BackingField: 50

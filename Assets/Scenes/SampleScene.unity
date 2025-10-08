@@ -595,6 +595,8 @@ GameObject:
   - component: {fileID: 526811724}
   - component: {fileID: 526811723}
   - component: {fileID: 526811725}
+  - component: {fileID: 526811726}
+  - component: {fileID: 526811727}
   m_Layer: 6
   m_Name: Player
   m_TagString: Untagged
@@ -786,8 +788,10 @@ MonoBehaviour:
   _clickButtonsHandler: {fileID: 692668158}
   _groundChecker: {fileID: 101577386}
   _attackChecker: {fileID: 407112368}
+  _itemChecker: {fileID: 526811726}
   _flipper: {fileID: 526811724}
   _collecter: {fileID: 526811723}
+  _taker: {fileID: 526811727}
   _health: {fileID: 526811725}
 --- !u!114 &526811723
 MonoBehaviour:
@@ -826,6 +830,33 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _maxValue: 100
+--- !u!114 &526811726
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 526811713}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6aaf626f7ef2dec4db7307c13b1f05cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _layer:
+    serializedVersion: 2
+    m_Bits: 256
+--- !u!114 &526811727
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 526811713}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3718dde673276040b1c5873d4a010fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &692668155
 GameObject:
   m_ObjectHideFlags: 0

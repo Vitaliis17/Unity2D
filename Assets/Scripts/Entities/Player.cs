@@ -13,9 +13,12 @@ public class Player : MonoBehaviour
 
     [SerializeField] private ZoneChecker _groundChecker;
     [SerializeField] private ZoneChecker _attackChecker;
+    [SerializeField] private ZoneChecker _itemChecker;
 
     [SerializeField] private Flipper _flipper;
+
     [SerializeField] private Collecter _collecter;
+    [SerializeField] private ItemTaker _taker;
 
     [SerializeField] private Health _health;
 
@@ -59,7 +62,10 @@ public class Player : MonoBehaviour
     }
 
     private void FixedUpdate()
-        => SetGroundedState();
+    {
+        SetGroundedState();
+        TakeItems();
+    }
 
     private void OnDisable()
     {
@@ -134,6 +140,12 @@ public class Player : MonoBehaviour
     {
         _animationPlayer.DeactivateGrounded();
         _animationPlayer.Play(AnimationHashes.Falling, ParameterHashes.IsFalling);
+    }
+
+    private void TakeItems()
+    {
+        Collider2D[] colliders = _itemChecker.ReadColliders();
+        _taker.Take(colliders);
     }
 
     private void StartTimer()
