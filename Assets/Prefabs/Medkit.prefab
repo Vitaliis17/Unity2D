@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3120329024601631015}
   - component: {fileID: 7168484136502655747}
   m_Layer: 8
-  m_Name: HealthPotion
+  m_Name: Medkit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -32,7 +32,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: -1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &6658789690119706142
 SpriteRenderer:

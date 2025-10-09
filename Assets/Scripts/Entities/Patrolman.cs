@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(CapsuleCollider2D), typeof(Rigidbody2D), typeof(Animator))]
@@ -15,7 +16,6 @@ public class Patrolman : MonoBehaviour
     private Rigidbody2D _rigidbody;
     private Runner _runner;
     private Attacker _attacker;
-    private Timer _timer;
 
     private AnimationPlayer _animationPlayer;
 
@@ -37,7 +37,6 @@ public class Patrolman : MonoBehaviour
 
         _runner = new(_speed);
         _attacker = new(_damage);
-        _timer = new();
 
         Animator animator = GetComponent<Animator>();
         _animationPlayer = new(animator);
@@ -46,12 +45,6 @@ public class Patrolman : MonoBehaviour
         _directionIndex = PositiveDirection;
         _movingDirection = PositiveDirection;
     }
-
-    private void OnEnable()
-        => _timer.TimePassed += _animationPlayer.SetDefault;
-
-    private void OnDisable()
-        => _timer.TimePassed -= _animationPlayer.SetDefault;
 
     private void FixedUpdate()
     {
@@ -96,7 +89,7 @@ public class Patrolman : MonoBehaviour
         if (player.TryGetComponent(out Health health))
             _attacker.Attack(health);
 
-        StartTimer();
+        StartNewCoroutine(WaitEndingAnimationState());
     }
 
     private int ReadDirection(Transform target)
@@ -127,13 +120,21 @@ public class Patrolman : MonoBehaviour
         _directionIndex *= ReversingMultiply;
     }
 
-    private void StartTimer()
+    private IEnumerator WaitEndingAnimationState()
     {
         float time = _animationPlayer.GetCurrentAnimationLength();
 
-        if (_coroutine != null)
+        yield return new WaitForSeconds(time);
+
+        _animationPlayer.SetDefault();
+    }
+
+
+    private void StartNewCoroutine(IEnumerator enumerator)
+    {
+        if(_coroutine != null)
             StopCoroutine(_coroutine);
 
-        _coroutine = StartCoroutine(_timer.Wait(time));
+        _coroutine = StartCoroutine(enumerator);
     }
 }

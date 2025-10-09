@@ -100,7 +100,7 @@ GameObject:
   - component: {fileID: 4677712286216286165}
   - component: {fileID: 4634624931410683850}
   m_Layer: 7
-  m_Name: Enemy
+  m_Name: Patrolman
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -121,7 +121,7 @@ Transform:
   - {fileID: 5399244779668421846}
   - {fileID: 3356426389498115097}
   m_Father: {fileID: 0}
-  m_RootOrder: -1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &8048774834921673263
 SpriteRenderer:

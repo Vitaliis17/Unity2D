@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(Animator))]
 public class Player : MonoBehaviour
@@ -24,7 +25,6 @@ public class Player : MonoBehaviour
     private Attacker _attacker;
     private AnimationPlayer _animationPlayer;
 
-    private Timer _timer;
     private DirectionReversalHandler _directionReversalHandler;
 
     private Rigidbody2D _rigidbody;
@@ -43,7 +43,6 @@ public class Player : MonoBehaviour
         Animator animator = GetComponent<Animator>();
         _animationPlayer = new(animator);
 
-        _timer = new();
         _directionReversalHandler = new();
     }
 
@@ -54,7 +53,6 @@ public class Player : MonoBehaviour
         _inputAxis.Moved += Move;
         _inputAxis.Moved += _directionReversalHandler.UpdateDirectionSigns;
 
-        _timer.TimePassed += _animationPlayer.SetDefault;
         _directionReversalHandler.DirectionChanged += _flipper.FlipY;
     }
 
@@ -71,7 +69,6 @@ public class Player : MonoBehaviour
         _inputAxis.Moved -= Move;
         _inputAxis.Moved -= _directionReversalHandler.UpdateDirectionSigns;
 
-        _timer.TimePassed -= _animationPlayer.SetDefault;
         _directionReversalHandler.DirectionChanged -= _flipper.FlipY;
     }
 
@@ -109,10 +106,12 @@ public class Player : MonoBehaviour
         for (int i = 0; i < colliders.Length; i++)
         {
             if (colliders[i].TryGetComponent(out Health health))
+            {
                 _attacker.Attack(health);
+            }
         }
 
-        StartTimer();
+        StartNewCoroutine(WaitEndingAnimationState());
     }
 
     private void SetGroundedState()
@@ -133,7 +132,8 @@ public class Player : MonoBehaviour
         _animationPlayer.ActivateGrounded();
 
         _animationPlayer.Play(AnimationHashes.Landing, ParameterHashes.IsLanding);
-        StartTimer();
+
+        StartNewCoroutine(WaitEndingAnimationState());
     }
 
     private void DeactivateGrounded()
@@ -148,13 +148,20 @@ public class Player : MonoBehaviour
         _taker.Take(colliders);
     }
 
-    private void StartTimer()
+    private IEnumerator WaitEndingAnimationState()
     {
         float time = _animationPlayer.GetCurrentAnimationLength();
 
+        yield return new WaitForSeconds(time);
+
+        _animationPlayer.SetDefault();
+    }
+
+    private void StartNewCoroutine(IEnumerator enumerator)
+    {
         if (_coroutine != null)
             StopCoroutine(_coroutine);
 
-        _coroutine = StartCoroutine(_timer.Wait(time));
+        _coroutine = StartCoroutine(enumerator);
     }
 }
