@@ -8,5 +8,5 @@ public class Collecter : MonoBehaviour
         => _coinAmount = 0;
 
     public void Take(Coin coin)
-        => _coinAmount += coin.PointAmount;
+        => _coinAmount += coin.GivePoints();
 }

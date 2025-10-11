@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-[RequireComponent(typeof(Rigidbody2D), typeof(Animator))]
+[RequireComponent(typeof(Rigidbody2D), typeof(Animator), typeof(Health))]
 public class Player : MonoBehaviour
 {
     [SerializeField, Min(0)] private float _speed;
@@ -54,6 +54,7 @@ public class Player : MonoBehaviour
         _inputAxis.Moved += _directionReversalHandler.UpdateDirectionSigns;
 
         _directionReversalHandler.DirectionChanged += _flipper.FlipY;
+        GetComponent<Health>().Died += () => Destroy(gameObject);
     }
 
     private void FixedUpdate()

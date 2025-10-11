@@ -19,6 +19,14 @@ public class Spawner<T> where T : Component
     public void ReleaseElement(T element)
         => _pool.Release(element);
 
+    public T GetElement(Vector2 position)
+    {
+        T element = _pool.Get();
+        element.transform.position = position;
+
+        return element;
+    }
+
     private T Create()
         => Object.Instantiate(_prefab, _container);
 

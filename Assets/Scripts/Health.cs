@@ -1,4 +1,5 @@
 using UnityEngine;
+using System;
 
 public class Health : MonoBehaviour
 {
@@ -7,6 +8,8 @@ public class Health : MonoBehaviour
     [SerializeField, Min(_minValue)] private int _maxValue;
 
     private int _currentValue;
+
+    public event Action Died;
 
     private void Awake()
         => _currentValue = _maxValue;
@@ -20,8 +23,8 @@ public class Health : MonoBehaviour
 
         TakeHealing(damage * DamageCoefficient);
 
-        if(IsDead())
-            Destroy(gameObject);
+        if (IsDead())
+            Died?.Invoke();
     }
 
     public void Heal(int healingAmount)

@@ -1,5 +1,6 @@
-using System.Collections;
 using UnityEngine;
+using System.Collections;
+using System;
 
 [RequireComponent(typeof(CapsuleCollider2D), typeof(Rigidbody2D), typeof(Animator))]
 public class Patrolman : MonoBehaviour
@@ -7,11 +8,12 @@ public class Patrolman : MonoBehaviour
     [SerializeField, Min(0)] private float _speed;
     [SerializeField, Min(0)] private int _damage;
 
-    [SerializeField] private Transform[] _targetPoints;
     [SerializeField] private Flipper _flipper;
     [SerializeField] private Health _health;
     [SerializeField] private ZoneChecker _attackChecker;
     [SerializeField] private ZoneChecker _viewChecker;
+
+    private Transform[] _targetPoints;
 
     private Rigidbody2D _rigidbody;
     private Runner _runner;
@@ -28,12 +30,16 @@ public class Patrolman : MonoBehaviour
 
     private Coroutine _coroutine;
 
+    public event Action<Patrolman> Releasing;
+
     private void Awake()
     {
         const int PositiveDirection = 1;
 
         _rigidbody = GetComponent<Rigidbody2D>();
         _rigidbody.freezeRotation = true;
+
+        _targetPoints = new Transform[0];
 
         _runner = new(_speed);
         _attacker = new(_damage);
@@ -46,6 +52,9 @@ public class Patrolman : MonoBehaviour
         _movingDirection = PositiveDirection;
     }
 
+    private void OnEnable()
+        => _health.Died += Die;
+
     private void FixedUpdate()
     {
         Collider2D playerCollider = _attackChecker.ReadCollider();
@@ -54,6 +63,12 @@ public class Patrolman : MonoBehaviour
             Attack(player);
 
         Transform target = _viewChecker.ReadCollider()?.transform;
+
+        if (target == null && _targetPoints[_currentTargetIndex] == null)
+        {
+            SetNextIndex();
+            return;
+        }
 
         if (target == null)
             target = _targetPoints[_currentTargetIndex];
@@ -70,6 +85,22 @@ public class Patrolman : MonoBehaviour
 
         if (_enemy == null && IsReached(_targetPoints[_currentTargetIndex]))
             SetNextIndex();
+    }
+
+    private void OnDisable()
+        => _health.Died -= Die;
+
+    public void AddTargetPoints(params TargetPoint[] targetPoints)
+    {
+        Transform[] temp = new Transform[_targetPoints.Length + targetPoints.Length];
+
+        for (int i = 0; i < _targetPoints.Length; i++)
+            temp[i] = _targetPoints[i];
+
+        for (int i = _targetPoints.Length; i < temp.Length; i++)
+            temp[i] = targetPoints[i - _targetPoints.Length].transform;
+
+        _targetPoints = temp;
     }
 
     private void Move(float direction)
@@ -120,6 +151,9 @@ public class Patrolman : MonoBehaviour
         _directionIndex *= ReversingMultiply;
     }
 
+    private void Die()
+        => Releasing?.Invoke(this);
+
     private IEnumerator WaitEndingAnimationState()
     {
         float time = _animationPlayer.GetCurrentAnimationLength();
@@ -129,10 +163,9 @@ public class Patrolman : MonoBehaviour
         _animationPlayer.SetDefault();
     }
 
-
     private void StartNewCoroutine(IEnumerator enumerator)
     {
-        if(_coroutine != null)
+        if (_coroutine != null)
             StopCoroutine(_coroutine);
 
         _coroutine = StartCoroutine(enumerator);
