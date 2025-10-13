@@ -1348,37 +1348,9 @@ PrefabInstance:
       propertyPath: m_Name
       value: Enemy
       objectReference: {fileID: 0}
-    - target: {fileID: 951829252202420038, guid: fbeca6996d740c94ab14dfc3ded47428, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4577030823034919532, guid: fbeca6996d740c94ab14dfc3ded47428, type: 3}
-      propertyPath: _speed
-      value: 150
-      objectReference: {fileID: 0}
-    - target: {fileID: 4577030823034919532, guid: fbeca6996d740c94ab14dfc3ded47428, type: 3}
-      propertyPath: _targetPoints.Array.data[0]
-      value: 
-      objectReference: {fileID: 1613412650}
-    - target: {fileID: 4577030823034919532, guid: fbeca6996d740c94ab14dfc3ded47428, type: 3}
-      propertyPath: _targetPoints.Array.data[1]
-      value: 
-      objectReference: {fileID: 296255021}
     - target: {fileID: 5718757700345164008, guid: fbeca6996d740c94ab14dfc3ded47428, type: 3}
       propertyPath: m_RootOrder
       value: -1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5718757700345164008, guid: fbeca6996d740c94ab14dfc3ded47428, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5718757700345164008, guid: fbeca6996d740c94ab14dfc3ded47428, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5718757700345164008, guid: fbeca6996d740c94ab14dfc3ded47428, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5718757700345164008, guid: fbeca6996d740c94ab14dfc3ded47428, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1420,9 +1392,7 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 2988141964679818257, guid: fbeca6996d740c94ab14dfc3ded47428, type: 3}
-    - {fileID: 785800264617285291, guid: fbeca6996d740c94ab14dfc3ded47428, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -1523,11 +1493,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _coinPrefab: {fileID: 3540560372133864650, guid: f7fbc24a40dadb545a996be239f81ead, type: 3}
   _medkitPrefab: {fileID: 7168484136502655747, guid: 1e1428c76aac52a408ec5709ae04def4, type: 3}
-  _patrolmanPrefab: {fileID: 4577030823034919532, guid: fbeca6996d740c94ab14dfc3ded47428, type: 3}
+  _enemyPrefab: {fileID: 3171122134105334732, guid: fbeca6996d740c94ab14dfc3ded47428, type: 3}
   _targetPointPrefab: {fileID: -5490236151319113205, guid: a09ac44a699b49849938d490278e7621, type: 3}
   _coinContainer: {fileID: 1419757086}
   _medkitContainer: {fileID: 2100813943}
-  _patrolmanContainer: {fileID: 1808736590}
+  _enemyContainer: {fileID: 1808736590}
   _targetPointContainer: {fileID: 504198828}
 --- !u!4 &798482177
 Transform:
@@ -7475,7 +7445,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1808736590}
   m_Layer: 0
-  m_Name: Patrolmen
+  m_Name: Enemies
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

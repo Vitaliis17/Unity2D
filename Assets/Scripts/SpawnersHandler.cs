@@ -4,17 +4,17 @@ public class SpawnersHandler : MonoBehaviour
 {
     [SerializeField] private Coin _coinPrefab;
     [SerializeField] private Medkit _medkitPrefab;
-    [SerializeField] private Patrolman _patrolmanPrefab;
+    [SerializeField] private Enemy _enemyPrefab;
     [SerializeField] private TargetPoint _targetPointPrefab;
 
     [SerializeField] private Transform _coinContainer;
     [SerializeField] private Transform _medkitContainer;
-    [SerializeField] private Transform _patrolmanContainer;
+    [SerializeField] private Transform _enemyContainer;
     [SerializeField] private Transform _targetPointContainer;
 
     private Spawner<Coin> _coinSpawner;
     private Spawner<Medkit> _medkitSpawner;
-    private Spawner<Patrolman> _patrolmanSpawner;
+    private Spawner<Enemy> _enemySpawner;
     private Spawner<TargetPoint> _targetPointSpawner;
 
     private void Awake()
@@ -43,15 +43,15 @@ public class SpawnersHandler : MonoBehaviour
         foreach (Medkit medkit in medkits)
             medkit.Releasing += Release;
 
-        _patrolmanSpawner = new Spawner<Patrolman>(_patrolmanPrefab, _patrolmanContainer);
+        _enemySpawner = new Spawner<Enemy>(_enemyPrefab, _enemyContainer);
 
-        Patrolman[] patrolmen = new[]
+        Enemy[] patrolmen = new[]
         {
-        _patrolmanSpawner.GetElement(new(13, 6)),
-        _patrolmanSpawner.GetElement(new(6.5f, -8))
+        _enemySpawner.GetElement(new(13, 6)),
+        _enemySpawner.GetElement(new(6.5f, -8))
         };
 
-        foreach (Patrolman patrolman in patrolmen)
+        foreach (Enemy patrolman in patrolmen)
             patrolman.Releasing += Release;
 
         _targetPointSpawner = new Spawner<TargetPoint>(_targetPointPrefab, _targetPointContainer);
@@ -85,9 +85,9 @@ public class SpawnersHandler : MonoBehaviour
                 _medkitSpawner.ReleaseElement(medkit);
                 break;
 
-            case Patrolman patrolman:
+            case Enemy patrolman:
                 patrolman.Releasing -= Release;
-                _patrolmanSpawner.ReleaseElement(patrolman);
+                _enemySpawner.ReleaseElement(patrolman);
                 break;
 
             case TargetPoint targetPoint:

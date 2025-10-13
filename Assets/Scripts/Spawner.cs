@@ -3,10 +3,10 @@ using UnityEngine.Pool;
 
 public class Spawner<T> where T : Component
 {
-    private ObjectPool<T> _pool;
+    private readonly ObjectPool<T> _pool;
 
-    private Transform _container;
-    private T _prefab;
+    private readonly Transform _container;
+    private readonly T _prefab;
 
     public Spawner(T prefab, Transform container)
     {
@@ -28,7 +28,12 @@ public class Spawner<T> where T : Component
     }
 
     private T Create()
-        => Object.Instantiate(_prefab, _container);
+    {
+        T element = Object.Instantiate(_prefab, _container);
+        element.name = _prefab.name;
+
+        return element;
+    }
 
     private void Get(T element)
         => element.gameObject.SetActive(true);

@@ -96,16 +96,16 @@ GameObject:
   - component: {fileID: 2832007702546262172}
   - component: {fileID: 7543140657448383064}
   - component: {fileID: 8586788608228662843}
-  - component: {fileID: 4577030823034919532}
+  - component: {fileID: 3171122134105334732}
   - component: {fileID: 4677712286216286165}
   - component: {fileID: 4634624931410683850}
   m_Layer: 7
-  m_Name: Patrolman
+  m_Name: Enemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &5718757700345164008
 Transform:
   m_ObjectHideFlags: 0
@@ -258,7 +258,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &4577030823034919532
+--- !u!114 &3171122134105334732
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -267,14 +267,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 951829252202420038}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5ff126b0e39bddf4a9ec325f03512b35, type: 3}
+  m_Script: {fileID: 11500000, guid: f73e73b62b835614d9b0fc6e0791a4eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _speed: 150
   _damage: 25
-  _targetPoints:
-  - {fileID: 0}
-  - {fileID: 0}
   _flipper: {fileID: 4677712286216286165}
   _health: {fileID: 4634624931410683850}
   _attackChecker: {fileID: 3562078112300209221}

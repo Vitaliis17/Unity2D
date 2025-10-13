@@ -3,7 +3,7 @@ using System.Collections;
 using System;
 
 [RequireComponent(typeof(CapsuleCollider2D), typeof(Rigidbody2D), typeof(Animator))]
-public class Patrolman : MonoBehaviour
+public class Enemy : MonoBehaviour
 {
     [SerializeField, Min(0)] private float _speed;
     [SerializeField, Min(0)] private int _damage;
@@ -30,7 +30,7 @@ public class Patrolman : MonoBehaviour
 
     private Coroutine _coroutine;
 
-    public event Action<Patrolman> Releasing;
+    public event Action<Enemy> Releasing;
 
     private void Awake()
     {
