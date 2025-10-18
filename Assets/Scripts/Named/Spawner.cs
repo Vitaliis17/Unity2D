@@ -42,5 +42,8 @@ public class Spawner<T> where T : Component
         => element.gameObject.SetActive(false);
 
     private void Destroy(T element)
-        => Object.Destroy(element.gameObject);
+    {
+        Debug.Log("A");
+        Object.Destroy(element.gameObject);
+    }
 }

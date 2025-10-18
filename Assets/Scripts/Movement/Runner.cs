@@ -1,11 +1,8 @@
 using UnityEngine;
 
-public class Runner
+public class Runner : MonoBehaviour
 {
-    private readonly float _speed;
-
-    public Runner(float speed)
-        => _speed = speed;
+    [SerializeField, Min(0f)] private float _speed;
 
     public void Move(Rigidbody2D rigidbody, float direction)
     {

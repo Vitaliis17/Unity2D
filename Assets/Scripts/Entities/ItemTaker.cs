@@ -14,10 +14,6 @@ public class ItemTaker : MonoBehaviour
                 _collecter.Take(coin);
             else if (collider.TryGetComponent(out Medkit medkit))
                 _health.Heal(medkit.GiveHealing());
-            else
-                continue;
-            
-            Destroy(collider.gameObject);
         }
     }
 }

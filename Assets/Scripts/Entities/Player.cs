@@ -4,7 +4,6 @@ using System.Collections;
 [RequireComponent(typeof(Rigidbody2D), typeof(Animator), typeof(Health))]
 public class Player : MonoBehaviour
 {
-    [SerializeField, Min(0)] private float _speed;
     [SerializeField, Min(0)] private float _jumpingForce;
 
     [SerializeField, Min(0)] private int _damage;
@@ -16,11 +15,12 @@ public class Player : MonoBehaviour
     [SerializeField] private ZoneChecker _attackChecker;
     [SerializeField] private ZoneChecker _itemChecker;
 
+    [SerializeField] private Runner _runner;
+
     [SerializeField] private ItemTaker _taker;
 
-    [SerializeField] private Flipper _flipper;
+    private Flipper _flipper;
 
-    private Runner _runner;
     private Jumper _jumper;
     private Attacker _attacker;
     private AnimationPlayer _animationPlayer;
@@ -36,7 +36,8 @@ public class Player : MonoBehaviour
         _rigidbody = GetComponent<Rigidbody2D>();
         _rigidbody.freezeRotation = true;
 
-        _runner = new(_speed);
+        _flipper = new();
+
         _jumper = new(_jumpingForce);
         _attacker = new(_damage);
 
@@ -53,14 +54,9 @@ public class Player : MonoBehaviour
         _inputAxis.Moved += Move;
         _inputAxis.Moved += _directionReversalHandler.UpdateDirectionSigns;
 
-        _directionReversalHandler.DirectionChanged += _flipper.FlipY;
-        GetComponent<Health>().Died += () => Destroy(gameObject);
-    }
+        _directionReversalHandler.DirectionChanged += Flip;
 
-    private void FixedUpdate()
-    {
-        SetGroundedState();
-        TakeItems();
+        GetComponent<Health>().Died += () => Destroy(gameObject);
     }
 
     private void OnDisable()
@@ -70,7 +66,13 @@ public class Player : MonoBehaviour
         _inputAxis.Moved -= Move;
         _inputAxis.Moved -= _directionReversalHandler.UpdateDirectionSigns;
 
-        _directionReversalHandler.DirectionChanged -= _flipper.FlipY;
+        _directionReversalHandler.DirectionChanged -= Flip;
+    }
+
+    private void FixedUpdate()
+    {
+        SetGroundedState();
+        TakeItems();
     }
 
     private void Jump(float direction)
@@ -165,4 +167,7 @@ public class Player : MonoBehaviour
 
         _coroutine = StartCoroutine(enumerator);
     }
+
+    private void Flip()
+        => _flipper.FlipY(transform);
 }
