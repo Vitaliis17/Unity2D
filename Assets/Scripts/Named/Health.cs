@@ -9,10 +9,18 @@ public class Health : MonoBehaviour
 
     private int _currentValue;
 
+    public event Action<int> MaxValueChanged;
+    public event Action<int> CurrentValueChanged;
+
     public event Action Died;
 
-    private void Awake()
-        => _currentValue = _maxValue;
+    private void Start()
+    {
+        _currentValue = _maxValue;
+
+        MaxValueChanged?.Invoke(_maxValue);
+        CurrentValueChanged?.Invoke(_currentValue);
+    }
 
     public void TakeDamage(int damage)
     {
@@ -20,6 +28,8 @@ public class Health : MonoBehaviour
             return;
 
         _currentValue = Mathf.Clamp(_currentValue - damage, _minValue, _maxValue);
+
+        CurrentValueChanged?.Invoke(_currentValue);
 
         if (IsDead())
             Died?.Invoke();
@@ -31,6 +41,8 @@ public class Health : MonoBehaviour
             return;
 
         _currentValue = Mathf.Clamp(_currentValue + healingAmount, _minValue, _maxValue);
+
+        CurrentValueChanged?.Invoke(_currentValue);
     }
 
     private bool IsDead()
