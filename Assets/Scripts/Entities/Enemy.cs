@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(CapsuleCollider2D), typeof(Rigidbody2D), typeof(Animator))]
@@ -18,8 +17,6 @@ public class Enemy : MonoBehaviour
     private Attacker _attacker;
 
     private AnimationPlayer _animationPlayer;
-
-    private Coroutine _coroutine;
 
     public event Action<Enemy> Releasing;
 
@@ -42,13 +39,16 @@ public class Enemy : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Collider2D playerCollider = _attackChecker.ReadCollider();
+        Collider2D playerCollider = _viewChecker.ReadCollider();
+        Move(playerCollider);
+
+        playerCollider = _attackChecker.ReadCollider();
 
         if (playerCollider && playerCollider.TryGetComponent(out Player player))
             Attack(player);
 
-        playerCollider = _viewChecker.ReadCollider();
-        Move(playerCollider);
+        if (_animationPlayer.IsPlaying() == false)
+            _animationPlayer.SetDefault();
     }
 
     private void Move(Collider2D target)
@@ -70,27 +70,8 @@ public class Enemy : MonoBehaviour
 
         if (player.TryGetComponent(out Health health))
             _attacker.Attack(health);
-
-        StartNewCoroutine(WaitEndingAnimationState());
     }
 
     private void Die()
         => Releasing?.Invoke(this);
-
-    private IEnumerator WaitEndingAnimationState()
-    {
-        float time = _animationPlayer.GetCurrentAnimationLength();
-
-        yield return new WaitForSeconds(time);
-
-        _animationPlayer.SetDefault();
-    }
-
-    private void StartNewCoroutine(IEnumerator enumerator)
-    {
-        if (_coroutine != null)
-            StopCoroutine(_coroutine);
-
-        _coroutine = StartCoroutine(enumerator);
-    }
 }

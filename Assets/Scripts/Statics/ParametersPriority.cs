@@ -9,11 +9,11 @@ public static class ParametersPriority
         _parametersPriority = new Dictionary<int, int>
         {
             { ParameterHashes.IsAttacking, 1},
-            { ParameterHashes.IsJumping, 2 },
-            { ParameterHashes.IsLanding, 3 },
+            { ParameterHashes.IsLanding, 2 },
+            { ParameterHashes.IsStartingJumping, 3 },
             { ParameterHashes.IsFalling, 4 },
             { ParameterHashes.IsRunning, 5 },
-            { ParameterHashes.IsIdle, 6 }
+            { ParameterHashes.IsIdle, 5 }
         };
     }
 
@@ -21,5 +21,8 @@ public static class ParametersPriority
         => _parametersPriority[hash];
 
     public static bool IsMostPriority(int first, int second)
-        => GetPriority(first) < GetPriority(second);
+        => GetPriority(first) <= GetPriority(second) && IsEquals(first, second) == false;
+
+    private static bool IsEquals(int first, int second)
+        => first == second;
 }

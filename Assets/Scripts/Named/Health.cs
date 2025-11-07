@@ -16,12 +16,10 @@ public class Health : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
-        const int DamageCoefficient = -1;
-
         if (damage <= 0)
             return;
 
-        TakeHealing(damage * DamageCoefficient);
+        _currentValue = Mathf.Clamp(_currentValue - damage, _minValue, _maxValue);
 
         if (IsDead())
             Died?.Invoke();
@@ -29,14 +27,11 @@ public class Health : MonoBehaviour
 
     public void Heal(int healingAmount)
     {
-        if(healingAmount <= 0) 
+        if (healingAmount <= 0)
             return;
 
-        TakeHealing(healingAmount);
+        _currentValue = Mathf.Clamp(_currentValue + healingAmount, _minValue, _maxValue);
     }
-
-    private void TakeHealing(int addingValue)
-        => _currentValue = Mathf.Clamp(_currentValue + addingValue, _minValue, _maxValue);
 
     private bool IsDead()
         => _currentValue <= _minValue;

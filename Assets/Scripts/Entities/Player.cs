@@ -1,5 +1,4 @@
 using UnityEngine;
-using System.Collections;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(Animator), typeof(Health))]
 public class Player : MonoBehaviour
@@ -28,8 +27,6 @@ public class Player : MonoBehaviour
     private DirectionReversalHandler _directionReversalHandler;
 
     private Rigidbody2D _rigidbody;
-
-    private Coroutine _coroutine;
 
     private void Awake()
     {
@@ -73,6 +70,9 @@ public class Player : MonoBehaviour
     {
         SetGroundedState();
         TakeItems();
+
+        if (_animationPlayer.IsPlaying() == false)
+            _animationPlayer.SetDefault();
     }
 
     private void Jump(float direction)
@@ -81,16 +81,16 @@ public class Player : MonoBehaviour
             return;
 
         _jumper.Jump(_rigidbody, direction);
-        _animationPlayer.Play(AnimationHashes.StartingJumping, ParameterHashes.IsJumping);
+        _animationPlayer.Play(AnimationHashes.StartingJumping, ParameterHashes.IsStartingJumping);
     }
 
     private void Move(float direction)
     {
         _runner.Move(_rigidbody, direction);
 
-        if (direction == 0 || _animationPlayer.GetParameter(ParameterHashes.IsGrounded) == false)
+        if (direction == 0)
         {
-            _animationPlayer.TurnOffRunning();
+            _animationPlayer.Play(AnimationHashes.Idle, ParameterHashes.IsIdle);
             return;
         }
 
@@ -113,30 +113,28 @@ public class Player : MonoBehaviour
                 _attacker.Attack(health);
             }
         }
-
-        StartNewCoroutine(WaitEndingAnimationState());
     }
 
     private void SetGroundedState()
     {
         bool isGrounded = _groundChecker.ReadCollider();
 
+        if (isGrounded == false)
+        {
+            DeactivateGrounded();
+            return;
+        }
+
         if (_animationPlayer.GetParameter(ParameterHashes.IsGrounded) == isGrounded)
             return;
 
-        if (isGrounded)
-            ActivateGrounded();
-        else
-            DeactivateGrounded();
+        ActivateGrounded();
     }
 
     private void ActivateGrounded()
     {
         _animationPlayer.ActivateGrounded();
-
         _animationPlayer.Play(AnimationHashes.Landing, ParameterHashes.IsLanding);
-
-        StartNewCoroutine(WaitEndingAnimationState());
     }
 
     private void DeactivateGrounded()
@@ -149,23 +147,6 @@ public class Player : MonoBehaviour
     {
         Collider2D[] colliders = _itemChecker.ReadColliders();
         _taker.Take(colliders);
-    }
-
-    private IEnumerator WaitEndingAnimationState()
-    {
-        float time = _animationPlayer.GetCurrentAnimationLength();
-
-        yield return new WaitForSeconds(time);
-
-        _animationPlayer.SetDefault();
-    }
-
-    private void StartNewCoroutine(IEnumerator enumerator)
-    {
-        if (_coroutine != null)
-            StopCoroutine(_coroutine);
-
-        _coroutine = StartCoroutine(enumerator);
     }
 
     private void Flip()

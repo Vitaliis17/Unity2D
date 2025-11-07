@@ -4,40 +4,45 @@ public class AnimationPlayer
 {
     private readonly Animator _animator;
 
-    private readonly int _defaultAnimationHash;
-    private readonly int _defaultParameterHash;
-
     private readonly int _layerIndex;
 
-    private int _currentAnimationHash;
-    private int _currentParameterHash;
+    private int? _currentAnimationHash;
+    private int? _currentParameterHash;
 
     public AnimationPlayer(Animator animator, int layerIndex = 0)
     {
         _animator = animator;
         _layerIndex = layerIndex;
 
-        _defaultAnimationHash = AnimationHashes.Idle;
-        _defaultParameterHash = ParameterHashes.IsIdle;
-
-        PlayDefault();
+        _currentAnimationHash = null;
+        _currentParameterHash = null;
     }
 
     public void Play(int animationHash, int parameterHash)
     {
-        if (ParametersPriority.IsMostPriority(parameterHash, _currentParameterHash) == false)
+        if (_currentParameterHash != null && ParametersPriority.IsMostPriority(parameterHash, _currentParameterHash.Value) == false)
             return;
 
         SetParameter(parameterHash);
         PlayAnimation(animationHash, parameterHash);
     }
 
+    public bool IsPlaying()
+    {
+        const float FinishedAnimationCoefficient = 1f;
+
+        _animator.Update(0f);
+        AnimatorStateInfo state = _animator.GetCurrentAnimatorStateInfo(_layerIndex);
+
+        return (state.normalizedTime <= FinishedAnimationCoefficient && state.loop == false) || state.loop;
+    }
+
     public void SetDefault()
     {
-        _animator.SetBool(_currentParameterHash, false);
+        _animator.SetBool(ParameterHashes.IsAttacking, false);
 
-        _currentParameterHash = _defaultParameterHash;
-        _currentAnimationHash = _defaultAnimationHash;
+        _currentParameterHash = null;
+        _currentAnimationHash = null;
     }
 
     public void ActivateGrounded()
@@ -49,22 +54,11 @@ public class AnimationPlayer
     public bool GetParameter(int hash)
         => _animator.GetBool(hash);
 
-    public void TurnOffRunning()
-        => _animator.SetBool(ParameterHashes.IsRunning, false);
-
-    public float GetCurrentAnimationLength()
-    {
-        _animator.Update(0f);
-
-        return _animator.GetCurrentAnimatorStateInfo(_layerIndex).length;
-    }
-
-    private void PlayDefault()
-        => PlayAnimation(_defaultAnimationHash, _defaultParameterHash);
-
     private void SetParameter(int hash)
     {
-        _animator.SetBool(_currentParameterHash, false);
+        if (_currentAnimationHash != null)
+            _animator.SetBool(_currentParameterHash.Value, false);
+
         _animator.SetBool(hash, true);
         _currentParameterHash = hash;
     }
@@ -74,6 +68,7 @@ public class AnimationPlayer
         _currentAnimationHash = animationHash;
         _currentParameterHash = parameterHash;
 
-        _animator.Play(_currentAnimationHash);
+        _animator.Update(0f);
+        _animator.Play(_currentAnimationHash.Value);
     }
 }
