@@ -31,7 +31,7 @@ public class Health : MonoBehaviour
 
         CurrentValueChanged?.Invoke(_currentValue);
 
-        if (IsDead())
+        if (IsAlive() == false)
             Died?.Invoke();
     }
 
@@ -45,6 +45,6 @@ public class Health : MonoBehaviour
         CurrentValueChanged?.Invoke(_currentValue);
     }
 
-    private bool IsDead()
-        => _currentValue <= _minValue;
+    public bool IsAlive()
+        => _currentValue > _minValue;
 }

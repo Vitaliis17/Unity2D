@@ -8,6 +8,7 @@ public static class AnimationHashes
     public static readonly int Falling = Animator.StringToHash(nameof(Falling));
     public static readonly int Landing = Animator.StringToHash(nameof(Landing));
     public static readonly int Attacking = Animator.StringToHash(nameof(Attacking));
+    public static readonly int UsingVampirism = Animator.StringToHash(nameof(UsingVampirism));
 
     public static readonly int Rotation = Animator.StringToHash(nameof(Rotation));
 }

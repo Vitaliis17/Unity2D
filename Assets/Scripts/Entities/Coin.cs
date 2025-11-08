@@ -1,7 +1,7 @@
 using UnityEngine;
 using System;
 
-[RequireComponent(typeof(Collider2D))]
+[RequireComponent(typeof(Collider2D), typeof(Animator))]
 public class Coin : MonoBehaviour
 {
     [SerializeField, Min(0)] private int _pointAmount;

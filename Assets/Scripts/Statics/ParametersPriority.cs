@@ -6,14 +6,17 @@ public static class ParametersPriority
 
     static ParametersPriority()
     {
-        _parametersPriority = new Dictionary<int, int>
+        _parametersPriority = new()
         {
             { ParameterHashes.IsAttacking, 1},
+            { ParameterHashes.IsUsingVampirism, 1},
             { ParameterHashes.IsLanding, 2 },
             { ParameterHashes.IsStartingJumping, 3 },
             { ParameterHashes.IsFalling, 4 },
             { ParameterHashes.IsRunning, 5 },
-            { ParameterHashes.IsIdle, 5 }
+            { ParameterHashes.IsIdle, 5 },
+
+            { ParameterHashes.IsRotation, 1}
         };
     }
 

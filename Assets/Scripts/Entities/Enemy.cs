@@ -47,8 +47,7 @@ public class Enemy : MonoBehaviour
         if (playerCollider && playerCollider.TryGetComponent(out Player player))
             Attack(player);
 
-        if (_animationPlayer.IsPlaying() == false)
-            _animationPlayer.SetDefault();
+        _animationPlayer.SetDefaultFreeLayers();
     }
 
     private void Move(Collider2D target)

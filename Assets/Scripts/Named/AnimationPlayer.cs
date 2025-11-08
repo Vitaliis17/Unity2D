@@ -1,48 +1,47 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class AnimationPlayer
 {
     private readonly Animator _animator;
 
-    private readonly int _layerIndex;
+    private Dictionary<int, int?> _currentLayerParameters;
 
-    private int? _currentAnimationHash;
-    private int? _currentParameterHash;
-
-    public AnimationPlayer(Animator animator, int layerIndex = 0)
+    public AnimationPlayer(Animator animator)
     {
         _animator = animator;
-        _layerIndex = layerIndex;
 
-        _currentAnimationHash = null;
-        _currentParameterHash = null;
+        for (int i = 0; i < _animator.layerCount; i++)
+            SetDefault(i);
     }
 
     public void Play(int animationHash, int parameterHash)
     {
-        if (_currentParameterHash != null && ParametersPriority.IsMostPriority(parameterHash, _currentParameterHash.Value) == false)
+        int layer = AnimationLayers.ReadLayer(animationHash);
+
+        if (_currentLayerParameters[layer] != null && ParametersPriority.IsMostPriority(parameterHash, _currentLayerParameters[layer].Value) == false)
             return;
 
-        SetParameter(parameterHash);
-        PlayAnimation(animationHash, parameterHash);
+        SetParameter(parameterHash, layer);
+        PlayAnimation(animationHash, parameterHash, layer);
     }
 
-    public bool IsPlaying()
+    public bool IsPlaying(int layer)
     {
         const float FinishedAnimationCoefficient = 1f;
 
         _animator.Update(0f);
-        AnimatorStateInfo state = _animator.GetCurrentAnimatorStateInfo(_layerIndex);
+        AnimatorStateInfo state = _animator.GetCurrentAnimatorStateInfo(layer);
 
         return (state.normalizedTime <= FinishedAnimationCoefficient && state.loop == false) || state.loop;
     }
 
-    public void SetDefault()
+    public void SetDefault(int layer)
     {
-        _animator.SetBool(ParameterHashes.IsAttacking, false);
+        if (_currentLayerParameters[layer] != null)
+            _animator.SetBool(_currentLayerParameters[layer].Value, false);
 
-        _currentParameterHash = null;
-        _currentAnimationHash = null;
+        _currentLayerParameters[layer] = null;
     }
 
     public void ActivateGrounded()
@@ -54,21 +53,31 @@ public class AnimationPlayer
     public bool GetParameter(int hash)
         => _animator.GetBool(hash);
 
-    private void SetParameter(int hash)
+    public void SetDefaultFreeLayers()
     {
-        if (_currentAnimationHash != null)
-            _animator.SetBool(_currentParameterHash.Value, false);
-
-        _animator.SetBool(hash, true);
-        _currentParameterHash = hash;
+        for(int i = 0; i < _animator.layerCount; i++)
+        {
+            if(IsPlaying(i) == false)
+            {
+                SetDefault(i);
+            }
+        }
     }
 
-    private void PlayAnimation(int animationHash, int parameterHash)
+    private void SetParameter(int hash, int layer)
     {
-        _currentAnimationHash = animationHash;
-        _currentParameterHash = parameterHash;
+        if (_currentLayerParameters[layer] != null)
+            _animator.SetBool(_currentLayerParameters[layer].Value, false);
+
+        _animator.SetBool(hash, true);
+        _currentLayerParameters[layer] = hash;
+    }
+
+    private void PlayAnimation(int animationHash, int parameterHash, int layer)
+    {
+        _currentLayerParameters[layer] = parameterHash;
 
         _animator.Update(0f);
-        _animator.Play(_currentAnimationHash.Value);
+        _animator.Play(animationHash, layer);
     }
 }

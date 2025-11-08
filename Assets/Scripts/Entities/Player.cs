@@ -13,6 +13,7 @@ public class Player : MonoBehaviour
     [SerializeField] private ZoneChecker _groundChecker;
     [SerializeField] private ZoneChecker _attackChecker;
     [SerializeField] private ZoneChecker _itemChecker;
+    [SerializeField] private ZoneChecker _vampirismChecker;
 
     [SerializeField] private Runner _runner;
 
@@ -47,6 +48,8 @@ public class Player : MonoBehaviour
     private void OnEnable()
     {
         _clickButtonsHandler.LeftMouseButtonPressed += Attack;
+        _clickButtonsHandler.FirstSideMouseButtonPressed += UseVampirism;
+
         _inputAxis.Jumped += Jump;
         _inputAxis.Moved += Move;
         _inputAxis.Moved += _directionReversalHandler.UpdateDirectionSigns;
@@ -59,6 +62,8 @@ public class Player : MonoBehaviour
     private void OnDisable()
     {
         _clickButtonsHandler.LeftMouseButtonPressed -= Attack;
+        _clickButtonsHandler.FirstSideMouseButtonPressed -= UseVampirism;
+
         _inputAxis.Jumped -= Jump;
         _inputAxis.Moved -= Move;
         _inputAxis.Moved -= _directionReversalHandler.UpdateDirectionSigns;
@@ -71,8 +76,12 @@ public class Player : MonoBehaviour
         SetGroundedState();
         TakeItems();
 
-        if (_animationPlayer.IsPlaying() == false)
-            _animationPlayer.SetDefault();
+        _animationPlayer.SetDefaultFreeLayers();
+    }
+
+    private void UseVampirism()
+    {
+        _animationPlayer.Play(AnimationHashes.UsingVampirism, ParameterHashes.IsUsingVampirism);
     }
 
     private void Jump(float direction)
@@ -81,6 +90,7 @@ public class Player : MonoBehaviour
             return;
 
         _jumper.Jump(_rigidbody, direction);
+
         _animationPlayer.Play(AnimationHashes.StartingJumping, ParameterHashes.IsStartingJumping);
     }
 
@@ -91,6 +101,7 @@ public class Player : MonoBehaviour
         if (direction == 0)
         {
             _animationPlayer.Play(AnimationHashes.Idle, ParameterHashes.IsIdle);
+
             return;
         }
 
