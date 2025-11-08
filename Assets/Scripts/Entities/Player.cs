@@ -1,12 +1,13 @@
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody2D), typeof(Animator), typeof(Health))]
+[RequireComponent(typeof(Rigidbody2D), typeof(Animator))]
 public class Player : MonoBehaviour
 {
     [SerializeField, Min(0)] private float _jumpingForce;
 
     [SerializeField, Min(0)] private int _damage;
 
+    [SerializeField] private Health _health;
     [SerializeField] private InputAxisReader _inputAxis;
     [SerializeField] private ClickButtonsHandler _clickButtonsHandler;
 
@@ -16,6 +17,7 @@ public class Player : MonoBehaviour
     [SerializeField] private ZoneChecker _vampirismChecker;
 
     [SerializeField] private Runner _runner;
+    [SerializeField] private VampirismSkill _vampirism;
 
     [SerializeField] private ItemTaker _taker;
 
@@ -48,7 +50,7 @@ public class Player : MonoBehaviour
     private void OnEnable()
     {
         _clickButtonsHandler.LeftMouseButtonPressed += Attack;
-        _clickButtonsHandler.FirstSideMouseButtonPressed += UseVampirism;
+        _clickButtonsHandler.FirstSideMouseButtonPressed += ActivateVampirism;
 
         _inputAxis.Jumped += Jump;
         _inputAxis.Moved += Move;
@@ -56,19 +58,22 @@ public class Player : MonoBehaviour
 
         _directionReversalHandler.DirectionChanged += Flip;
 
-        GetComponent<Health>().Died += () => Destroy(gameObject);
+        _vampirism.Deactivation += DeactivateVampirism;
+        _health.Died += () => Destroy(gameObject);
     }
 
     private void OnDisable()
     {
         _clickButtonsHandler.LeftMouseButtonPressed -= Attack;
-        _clickButtonsHandler.FirstSideMouseButtonPressed -= UseVampirism;
+        _clickButtonsHandler.FirstSideMouseButtonPressed -= ActivateVampirism;
 
         _inputAxis.Jumped -= Jump;
         _inputAxis.Moved -= Move;
         _inputAxis.Moved -= _directionReversalHandler.UpdateDirectionSigns;
 
         _directionReversalHandler.DirectionChanged -= Flip;
+
+        _vampirism.Deactivation -= DeactivateVampirism;
     }
 
     private void FixedUpdate()
@@ -76,12 +81,31 @@ public class Player : MonoBehaviour
         SetGroundedState();
         TakeItems();
 
+        if (_vampirism.IsActive)
+            UseVampirism();
+
         _animationPlayer.SetDefaultFreeLayers();
     }
 
+    private void ActivateVampirism()
+    {
+        if (_vampirism.IsPossibleUsing == false)
+            return;
+
+        _animationPlayer.Play(AnimationHashes.UsingVampirism, ParameterHashes.IsUsingVampirism);
+
+        _vampirism.Activate();
+    }
+
+    private void DeactivateVampirism()
+        => _animationPlayer.TurnOffAnimation(AnimationHashes.UsingVampirism, ParameterHashes.IsUsingVampirism);
+
     private void UseVampirism()
     {
-        _animationPlayer.Play(AnimationHashes.UsingVampirism, ParameterHashes.IsUsingVampirism);
+        Collider2D enemy = _vampirismChecker.ReadCollider();
+
+        if (enemy != null && enemy.TryGetComponent(out Health enemyHealth))
+            _vampirism.Use(_health, enemyHealth);
     }
 
     private void Jump(float direction)

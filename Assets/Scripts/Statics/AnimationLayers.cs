@@ -14,7 +14,6 @@ public static class AnimationLayers
             { AnimationHashes.Falling, AnimatorLayers.Base },
             { AnimationHashes.Running, AnimatorLayers.Base },
             { AnimationHashes.Idle, AnimatorLayers.Base },
-            { AnimationHashes.Landing, AnimatorLayers.Base },
 
             { AnimationHashes.UsingVampirism, AnimatorLayers.Background},
 

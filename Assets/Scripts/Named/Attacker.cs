@@ -1,4 +1,4 @@
-public class Attacker 
+public class Attacker
 {
     private readonly int _damage;
 

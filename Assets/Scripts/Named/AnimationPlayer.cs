@@ -5,14 +5,15 @@ public class AnimationPlayer
 {
     private readonly Animator _animator;
 
-    private Dictionary<int, int?> _currentLayerParameters;
+    private readonly Dictionary<int, int?> _currentLayerParameters;
 
     public AnimationPlayer(Animator animator)
     {
         _animator = animator;
+        _currentLayerParameters = new();
 
         for (int i = 0; i < _animator.layerCount; i++)
-            SetDefault(i);
+            _currentLayerParameters.Add(i, null);
     }
 
     public void Play(int animationHash, int parameterHash)
@@ -36,6 +37,16 @@ public class AnimationPlayer
         return (state.normalizedTime <= FinishedAnimationCoefficient && state.loop == false) || state.loop;
     }
 
+    public void TurnOffAnimation(int animationHash, int parameterHash)
+    {
+        int layer = AnimationLayers.ReadLayer(animationHash);
+
+        _animator.Update(0f);
+
+        if (_currentLayerParameters[layer] == parameterHash)
+            SetDefault(layer);
+    }
+
     public void SetDefault(int layer)
     {
         if (_currentLayerParameters[layer] != null)
@@ -55,9 +66,9 @@ public class AnimationPlayer
 
     public void SetDefaultFreeLayers()
     {
-        for(int i = 0; i < _animator.layerCount; i++)
+        for (int i = 0; i < _animator.layerCount; i++)
         {
-            if(IsPlaying(i) == false)
+            if (IsPlaying(i) == false)
             {
                 SetDefault(i);
             }
