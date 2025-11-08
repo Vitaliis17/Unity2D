@@ -5,6 +5,7 @@ using UnityEngine;
 public class Timer
 {
     public event Action WaitingEnded;
+    public event Action<float> ValueChanged;
 
     public IEnumerator Wait(float time)
     {
@@ -15,6 +16,8 @@ public class Timer
             time -= Time.deltaTime;
 
             yield return null;
+
+            ValueChanged?.Invoke(time);
         }
 
         WaitingEnded?.Invoke();

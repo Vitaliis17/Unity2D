@@ -6,7 +6,7 @@ public class VampirismSkill : MonoBehaviour
     [SerializeField] private int _healthAmount;
 
     [SerializeField] private float _reloadTime;
-    [SerializeField] private float _activeTime;
+    [SerializeField] private int _activeTime;
 
     private Vampirism _vampirism;
     
@@ -14,6 +14,9 @@ public class VampirismSkill : MonoBehaviour
     private Timer _activityTimer;
     
     private Coroutine _coroutine;
+
+    public event Action<int> MaxValueChanged;
+    public event Action<float> CurrentValueChanged;
 
     public Action Deactivation;
 
@@ -34,12 +37,16 @@ public class VampirismSkill : MonoBehaviour
     private void OnEnable()
     {
         _activityTimer.WaitingEnded += Deactivate;
+        _activityTimer.ValueChanged += InvokeCurrentTimeChanged;
+
         _reloader.WaitingEnded += ActivatePossibleUsing;
     }
 
     private void OnDisable()
     {
         _activityTimer.WaitingEnded -= Deactivate;
+        _activityTimer.ValueChanged -= InvokeCurrentTimeChanged;
+
         _reloader.WaitingEnded -= ActivatePossibleUsing;
     }
 
@@ -54,8 +61,12 @@ public class VampirismSkill : MonoBehaviour
         if (_coroutine != null)
             _coroutine = null;
 
+        MaxValueChanged?.Invoke(_activeTime);
         _coroutine = StartCoroutine(_activityTimer.Wait(_activeTime));
     }
+
+    private void InvokeCurrentTimeChanged(float time)
+        => CurrentValueChanged?.Invoke(time);
 
     private void Deactivate()
     {

@@ -5,7 +5,7 @@ using System.Collections;
 [RequireComponent(typeof(Slider))]
 public class SmoothBar : MonoBehaviour
 {
-    [SerializeField] private Health _health;
+    [SerializeField] private Presenter _health;
 
     private Slider _slider;
     private Coroutine _coroutine;
@@ -28,10 +28,10 @@ public class SmoothBar : MonoBehaviour
     private void LateUpdate()
         => transform.rotation = Quaternion.identity;
 
-    private void SetMax(int value)
+    public void SetMax(int value)
         => _slider.maxValue = value;
 
-    private void SetValueSmoothly(int value)
+    public void SetValueSmoothly(float value)
     {
         const int Delta = 1;
 

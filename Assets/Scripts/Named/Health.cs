@@ -10,7 +10,7 @@ public class Health : MonoBehaviour
     private int _currentValue;
 
     public event Action<int> MaxValueChanged;
-    public event Action<int> CurrentValueChanged;
+    public event Action<float> CurrentValueChanged;
 
     public event Action Died;
 
