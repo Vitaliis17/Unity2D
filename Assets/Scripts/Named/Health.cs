@@ -6,8 +6,8 @@ public class Health : MonoBehaviour
     private const int _minValue = 0;
 
     [SerializeField, Min(_minValue)] private int _maxValue;
-
-    private int _currentValue;
+    
+    private float _ñurrentValue;
 
     public event Action<int> MaxValueChanged;
     public event Action<float> CurrentValueChanged;
@@ -16,10 +16,9 @@ public class Health : MonoBehaviour
 
     private void Start()
     {
-        _currentValue = _maxValue;
-
         MaxValueChanged?.Invoke(_maxValue);
-        CurrentValueChanged?.Invoke(_currentValue);
+
+        SetCurrentValue(_maxValue);
     }
 
     public void TakeDamage(int damage)
@@ -27,9 +26,8 @@ public class Health : MonoBehaviour
         if (damage <= 0)
             return;
 
-        _currentValue = Mathf.Clamp(_currentValue - damage, _minValue, _maxValue);
-
-        CurrentValueChanged?.Invoke(_currentValue);
+        float nextValue = Mathf.Clamp(_ñurrentValue - damage, _minValue, _maxValue);
+        SetCurrentValue(nextValue);
 
         if (IsAlive() == false)
             Died?.Invoke();
@@ -40,11 +38,25 @@ public class Health : MonoBehaviour
         if (healingAmount <= 0)
             return;
 
-        _currentValue = Mathf.Clamp(_currentValue + healingAmount, _minValue, _maxValue);
-
-        CurrentValueChanged?.Invoke(_currentValue);
+        float nextValue = Mathf.Clamp(_ñurrentValue + healingAmount, _minValue, _maxValue);
+        SetCurrentValue(nextValue);
     }
 
-    public bool IsAlive()
-        => _currentValue > _minValue;
+    public float Transfer(int value)
+    {
+        float transferirngValue = _ñurrentValue < value ? _ñurrentValue : value;
+
+        TakeDamage(value);
+
+        return transferirngValue;
+    }
+
+    private bool IsAlive()
+        => _ñurrentValue > _minValue;
+
+    private void SetCurrentValue(float value)
+    {
+        _ñurrentValue = value;
+        CurrentValueChanged?.Invoke(_ñurrentValue);
+    }
 }

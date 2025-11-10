@@ -2,14 +2,16 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-public class Timer
+public class Timer : MonoBehaviour
 {
-    public event Action WaitingEnded;
-    public event Action<float> ValueChanged;
+    public event Action<float> MaxValueChanged;
+    public event Action<float> CurrentValueChanged;
 
     public IEnumerator Wait(float time)
     {
         const int MinTime = 0;
+
+        MaxValueChanged?.Invoke(time);
 
         while (time > MinTime)
         {
@@ -17,9 +19,26 @@ public class Timer
 
             yield return null;
 
-            ValueChanged?.Invoke(time);
+            CurrentValueChanged?.Invoke(time);
         }
+    }
 
-        WaitingEnded?.Invoke();
+    public IEnumerator WaitReverse(float time)
+    {
+        const int MinTime = 0;
+
+        float currentValue = MinTime;
+
+        MaxValueChanged?.Invoke(time);
+        CurrentValueChanged?.Invoke(currentValue);
+
+        while(currentValue < time)
+        {
+            currentValue += Time.deltaTime;
+
+            yield return null;
+
+            CurrentValueChanged?.Invoke(currentValue);
+        }
     }
 }

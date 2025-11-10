@@ -5,9 +5,12 @@ public class Player : MonoBehaviour
 {
     [SerializeField, Min(0)] private float _jumpingForce;
 
+    [SerializeField, Min(0)] private int _vampirismTransferHealthAmount;
+    [SerializeField, Min(0)] private int _vampirismReloadTime;
+    [SerializeField, Min(0)] private int _vampirismActiveTime;
+
     [SerializeField, Min(0)] private int _damage;
 
-    [SerializeField] private Health _health;
     [SerializeField] private InputAxisReader _inputAxis;
     [SerializeField] private ClickButtonsHandler _clickButtonsHandler;
 
@@ -17,9 +20,11 @@ public class Player : MonoBehaviour
     [SerializeField] private ZoneChecker _vampirismChecker;
 
     [SerializeField] private Runner _runner;
-    [SerializeField] private VampirismSkill _vampirism;
+    [SerializeField] private Health _health;
+    [SerializeField] private Timer _timer;
 
-    [SerializeField] private ItemTaker _taker;
+    private Collecter _collecter;
+    private ItemTaker _taker;
 
     private Flipper _flipper;
 
@@ -30,11 +35,18 @@ public class Player : MonoBehaviour
     private DirectionReversalHandler _directionReversalHandler;
 
     private Rigidbody2D _rigidbody;
+    
+    private VampirismSkill _vampirism;
+
+    private Coroutine _coroutine;
 
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody2D>();
         _rigidbody.freezeRotation = true;
+
+        _collecter = new();
+        _taker = new();
 
         _flipper = new();
 
@@ -45,6 +57,8 @@ public class Player : MonoBehaviour
         _animationPlayer = new(animator);
 
         _directionReversalHandler = new();
+
+        _vampirism = new(_timer, _vampirismTransferHealthAmount, _vampirismReloadTime, _vampirismActiveTime);
     }
 
     private void OnEnable()
@@ -81,7 +95,7 @@ public class Player : MonoBehaviour
         SetGroundedState();
         TakeItems();
 
-        if (_vampirism.IsActive)
+        if (_vampirism.IsActiveVampirism)
             UseVampirism();
 
         _animationPlayer.SetDefaultFreeLayers();
@@ -94,7 +108,10 @@ public class Player : MonoBehaviour
 
         _animationPlayer.Play(AnimationHashes.UsingVampirism, ParameterHashes.IsUsingVampirism);
 
-        _vampirism.Activate();
+        if (_coroutine != null)
+            StopCoroutine(_coroutine);
+
+        _coroutine = StartCoroutine(_vampirism.StartUsing());
     }
 
     private void DeactivateVampirism()
@@ -105,7 +122,7 @@ public class Player : MonoBehaviour
         Collider2D enemy = _vampirismChecker.ReadCollider();
 
         if (enemy != null && enemy.TryGetComponent(out Health enemyHealth))
-            _vampirism.Use(_health, enemyHealth);
+            _vampirism.TryUse(_health, enemyHealth);
     }
 
     private void Jump(float direction)
@@ -181,7 +198,7 @@ public class Player : MonoBehaviour
     private void TakeItems()
     {
         Collider2D[] colliders = _itemChecker.ReadColliders();
-        _taker.Take(colliders);
+        _taker.Take(_collecter, _health, colliders);
     }
 
     private void Flip()

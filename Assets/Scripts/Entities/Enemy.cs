@@ -6,16 +6,17 @@ public class Enemy : MonoBehaviour
 {
     [SerializeField, Min(0)] private int _damage;
 
-    [SerializeField] private Health _health;
     [SerializeField] private ZoneChecker _attackChecker;
     [SerializeField] private ZoneChecker _viewChecker;
 
     [SerializeField] private Patrolman _patrolman;
     [SerializeField] private Stalker _stalker;
 
-    private Rigidbody2D _rigidbody;
-    private Attacker _attacker;
+    [SerializeField] private Health _health;
 
+    private Rigidbody2D _rigidbody;    
+    
+    private Attacker _attacker;
     private AnimationPlayer _animationPlayer;
 
     public event Action<Enemy> Releasing;
@@ -26,7 +27,7 @@ public class Enemy : MonoBehaviour
         _rigidbody.freezeRotation = true;
 
         _attacker = new(_damage);
-
+    
         Animator animator = GetComponent<Animator>();
         _animationPlayer = new(animator);
     }

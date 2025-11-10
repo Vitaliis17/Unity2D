@@ -1,89 +1,69 @@
-using UnityEngine;
 using System;
+using System.Collections;
 
-public class VampirismSkill : MonoBehaviour
+public class VampirismSkill
 {
-    [SerializeField] private int _healthAmount;
-
-    [SerializeField] private float _reloadTime;
-    [SerializeField] private int _activeTime;
-
-    private Vampirism _vampirism;
+    private readonly Timer _timer;
+    private readonly Vampirism _vampirism;
     
-    private Timer _reloader;
-    private Timer _activityTimer;
+    private readonly int _healthAmount;
+
+    private readonly int _reloadTime;
+    private readonly int _activeTime;
     
-    private Coroutine _coroutine;
-
-    public event Action<int> MaxValueChanged;
-    public event Action<float> CurrentValueChanged;
-
     public Action Deactivation;
 
-    public bool IsActive {  get; private set; }
+    public bool IsActiveVampirism {  get; private set; }
     public bool IsPossibleUsing { get; private set; }
 
-    private void Awake()
+    
+    public VampirismSkill(Timer timer, int healthAmount, int reloadTime, int activeTime)
     {
+        _timer = timer;
+
+        _healthAmount = healthAmount;
+
+        _reloadTime = reloadTime;
+        _activeTime = activeTime;
+
         _vampirism = new();
 
-        _reloader = new();
-        _activityTimer = new();
-
-        IsActive = false;
-        ActivatePossibleUsing();
+        IsActiveVampirism = false;
+        IsPossibleUsing = true;
     }
 
-    private void OnEnable()
+    public bool TryUse(Health taker, Health giver)
     {
-        _activityTimer.WaitingEnded += Deactivate;
-        _activityTimer.ValueChanged += InvokeCurrentTimeChanged;
+        if (IsActiveVampirism == false)
+            return false;
 
-        _reloader.WaitingEnded += ActivatePossibleUsing;
+        _vampirism.Transfer(taker, giver, _healthAmount);
+
+        return true;
     }
 
-    private void OnDisable()
+    public IEnumerator StartUsing()
     {
-        _activityTimer.WaitingEnded -= Deactivate;
-        _activityTimer.ValueChanged -= InvokeCurrentTimeChanged;
-
-        _reloader.WaitingEnded -= ActivatePossibleUsing;
+        yield return Activate();
+        yield return Reload();
     }
 
-    public void Use(Health taker, Health giver)
-        => _vampirism.Transfer(taker, giver, _healthAmount);
-
-    public void Activate()
+    private IEnumerator Activate()
     {
-        IsActive = true;
+        IsActiveVampirism = true;
         IsPossibleUsing = false;
 
-        if (_coroutine != null)
-            _coroutine = null;
-
-        MaxValueChanged?.Invoke(_activeTime);
-        _coroutine = StartCoroutine(_activityTimer.Wait(_activeTime));
+        yield return _timer.Wait(_activeTime);
     }
 
-    private void InvokeCurrentTimeChanged(float time)
-        => CurrentValueChanged?.Invoke(time);
-
-    private void Deactivate()
+    private IEnumerator Reload()
     {
-        IsActive = false;
+        IsActiveVampirism = false;
 
         Deactivation?.Invoke();
-        Reload();
+
+        yield return _timer.WaitReverse(_reloadTime);
+
+        IsPossibleUsing = true;
     }
-
-    private void Reload()
-    {
-        if(_coroutine != null)
-            StopCoroutine(_coroutine);
-
-        _coroutine = StartCoroutine(_reloader.Wait(_reloadTime));
-    }
-
-    private void ActivatePossibleUsing()
-        => IsPossibleUsing = true;
 }

@@ -1,11 +1,9 @@
-using UnityEngine;
-
-public class Collecter : MonoBehaviour
+public class Collecter
 {
     private int _coinAmount;
 
-    private void Awake()
-        => _coinAmount = 0;
+    public Collecter(int coinAmount = 0)
+        => _coinAmount = coinAmount;
 
     public void Take(Coin coin)
         => _coinAmount += coin.GivePoints();

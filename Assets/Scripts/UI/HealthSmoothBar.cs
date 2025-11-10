@@ -3,9 +3,9 @@ using UnityEngine.UI;
 using System.Collections;
 
 [RequireComponent(typeof(Slider))]
-public class SmoothBar : MonoBehaviour
+public class HealthSmoothBar : MonoBehaviour
 {
-    [SerializeField] private Presenter _health;
+    [SerializeField] private Health _health;
 
     private Slider _slider;
     private Coroutine _coroutine;
@@ -28,13 +28,13 @@ public class SmoothBar : MonoBehaviour
     private void LateUpdate()
         => transform.rotation = Quaternion.identity;
 
-    public void SetMax(int value)
+    private void SetMax(int value)
         => _slider.maxValue = value;
 
-    public void SetValueSmoothly(float value)
+    private void SetValueSmoothly(float value)
     {
         const int Delta = 1;
-
+        
         if (_coroutine != null)
             StopCoroutine(_coroutine);
 
