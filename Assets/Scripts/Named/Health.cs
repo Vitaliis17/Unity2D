@@ -42,15 +42,6 @@ public class Health : MonoBehaviour
         SetCurrentValue(nextValue);
     }
 
-    public float Transfer(int value)
-    {
-        float transferirngValue = _ñurrentValue < value ? _ñurrentValue : value;
-
-        TakeDamage(value);
-
-        return transferirngValue;
-    }
-
     private bool IsAlive()
         => _ñurrentValue > _minValue;
 

@@ -1,31 +1,26 @@
 using System;
 using System.Collections;
+using UnityEngine;
 
-public class VampirismSkill
+public class VampirismSkill : MonoBehaviour
 {
-    private readonly Timer _timer;
-    private readonly Vampirism _vampirism;
-    
-    private readonly int _healthAmount;
+    [SerializeField, Min(0)] private int _healthAmount;
 
-    private readonly int _reloadTime;
-    private readonly int _activeTime;
+    [SerializeField, Min(0)] private int _reloadTime;
+    [SerializeField, Min(0)] private int _activeTime;
     
-    public Action Deactivation;
+    [SerializeField] private Timer _timer;
+    
+    private Vampirism _vampirism;
+    private Coroutine _coroutine;
+
+    public event Action Deactivation;
 
     public bool IsActiveVampirism {  get; private set; }
     public bool IsPossibleUsing { get; private set; }
-
     
-    public VampirismSkill(Timer timer, int healthAmount, int reloadTime, int activeTime)
+    private void Awake()
     {
-        _timer = timer;
-
-        _healthAmount = healthAmount;
-
-        _reloadTime = reloadTime;
-        _activeTime = activeTime;
-
         _vampirism = new();
 
         IsActiveVampirism = false;
@@ -42,7 +37,15 @@ public class VampirismSkill
         return true;
     }
 
-    public IEnumerator StartUsing()
+    public void StartUsing()
+    {
+        if (_coroutine != null)
+            StopCoroutine(_coroutine);
+
+        _coroutine = StartCoroutine(StartTimers());
+    }
+
+    private IEnumerator StartTimers()
     {
         yield return Activate();
         yield return Reload();
