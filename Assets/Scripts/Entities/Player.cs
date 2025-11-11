@@ -13,7 +13,6 @@ public class Player : MonoBehaviour
     [SerializeField] private ZoneChecker _groundChecker;
     [SerializeField] private ZoneChecker _attackChecker;
     [SerializeField] private ZoneChecker _itemChecker;
-    [SerializeField] private ZoneChecker _vampirismChecker;
 
     [SerializeField] private Runner _runner;
     [SerializeField] private Health _health;
@@ -54,7 +53,6 @@ public class Player : MonoBehaviour
     private void OnEnable()
     {
         _clickButtonsHandler.LeftMouseButtonPressed += Attack;
-        _clickButtonsHandler.FirstSideMouseButtonPressed += ActivateVampirism;
 
         _inputAxis.Jumped += Jump;
         _inputAxis.Moved += Move;
@@ -62,6 +60,7 @@ public class Player : MonoBehaviour
 
         _directionReversalHandler.DirectionChanged += Flip;
 
+        _vampirism.Activation += ActivateVampirism;
         _vampirism.Deactivation += DeactivateVampirism;
         _health.Died += () => Destroy(gameObject);
     }
@@ -77,6 +76,7 @@ public class Player : MonoBehaviour
 
         _directionReversalHandler.DirectionChanged -= Flip;
 
+        _vampirism.Activation -= ActivateVampirism;
         _vampirism.Deactivation -= DeactivateVampirism;
     }
 
@@ -85,32 +85,14 @@ public class Player : MonoBehaviour
         SetGroundedState();
         TakeItems();
 
-        if (_vampirism.IsActiveVampirism)
-            UseVampirism();
-
         _animationPlayer.SetDefaultFreeLayers();
     }
 
     private void ActivateVampirism()
-    {
-        if (_vampirism.IsPossibleUsing == false)
-            return;
-
-        _animationPlayer.Play(AnimationHashes.UsingVampirism, ParameterHashes.IsUsingVampirism);
-
-        _vampirism.StartUsing();
-    }
+        => _animationPlayer.Play(AnimationHashes.UsingVampirism, ParameterHashes.IsUsingVampirism);
 
     private void DeactivateVampirism()
         => _animationPlayer.TurnOffAnimation(AnimationHashes.UsingVampirism, ParameterHashes.IsUsingVampirism);
-
-    private void UseVampirism()
-    {
-        Collider2D enemy = _vampirismChecker.ReadCollider();
-
-        if (enemy != null && enemy.TryGetComponent(out Health enemyHealth))
-            _vampirism.TryUse(_health, enemyHealth);
-    }
 
     private void Jump(float direction)
     {

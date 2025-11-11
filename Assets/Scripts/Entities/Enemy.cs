@@ -14,8 +14,8 @@ public class Enemy : MonoBehaviour
 
     [SerializeField] private Health _health;
 
-    private Rigidbody2D _rigidbody;    
-    
+    private Rigidbody2D _rigidbody;
+
     private Attacker _attacker;
     private AnimationPlayer _animationPlayer;
 
@@ -27,7 +27,7 @@ public class Enemy : MonoBehaviour
         _rigidbody.freezeRotation = true;
 
         _attacker = new(_damage);
-    
+
         Animator animator = GetComponent<Animator>();
         _animationPlayer = new(animator);
     }

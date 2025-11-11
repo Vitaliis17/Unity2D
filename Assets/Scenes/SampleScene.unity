@@ -439,7 +439,7 @@ GameObject:
   m_Component:
   - component: {fileID: 378807917}
   - component: {fileID: 378807918}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -956,7 +956,6 @@ MonoBehaviour:
   _groundChecker: {fileID: 101577386}
   _attackChecker: {fileID: 407112368}
   _itemChecker: {fileID: 526811726}
-  _vampirismChecker: {fileID: 1598841914}
   _runner: {fileID: 526811728}
   _health: {fileID: 526811730}
   _vampirism: {fileID: 526811731}
@@ -1028,6 +1027,9 @@ MonoBehaviour:
   _healthAmount: 1
   _reloadTime: 4
   _activeTime: 6
+  _clickButtonsHandler: {fileID: 692668158}
+  _vampirismChecker: {fileID: 1598841914}
+  _health: {fileID: 526811730}
   _timer: {fileID: 526811729}
 --- !u!1 &692668155
 GameObject:
@@ -7533,7 +7535,7 @@ GameObject:
   - component: {fileID: 1598841913}
   - component: {fileID: 1598841915}
   - component: {fileID: 1598841914}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: VampirismRange
   m_TagString: Untagged
   m_Icon: {fileID: 0}

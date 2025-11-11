@@ -4,8 +4,19 @@ using UnityEngine;
 
 public class Timer : MonoBehaviour
 {
+    private float _waitingTime;
+    private WaitForSeconds _waitingForSeconds;
+
     public event Action<float> MaxValueChanged;
     public event Action<float> CurrentValueChanged;
+
+    public event Action OnValueChanged;
+
+    private void Awake()
+    {
+        _waitingTime = Time.fixedDeltaTime;
+        _waitingForSeconds = new(_waitingTime);
+    }
 
     public IEnumerator Wait(float time)
     {
@@ -15,10 +26,11 @@ public class Timer : MonoBehaviour
 
         while (time > MinTime)
         {
-            time -= Time.deltaTime;
+            time -= _waitingTime;
 
-            yield return null;
+            yield return _waitingForSeconds;
 
+            OnValueChanged?.Invoke();
             CurrentValueChanged?.Invoke(time);
         }
     }
@@ -30,13 +42,12 @@ public class Timer : MonoBehaviour
         float currentValue = MinTime;
 
         MaxValueChanged?.Invoke(time);
-        CurrentValueChanged?.Invoke(currentValue);
 
         while(currentValue < time)
         {
-            currentValue += Time.deltaTime;
+            currentValue += _waitingTime;
 
-            yield return null;
+            yield return _waitingForSeconds;
 
             CurrentValueChanged?.Invoke(currentValue);
         }

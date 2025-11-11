@@ -8,39 +8,55 @@ public class VampirismSkill : MonoBehaviour
 
     [SerializeField, Min(0)] private int _reloadTime;
     [SerializeField, Min(0)] private int _activeTime;
-    
+
+    [SerializeField] private ClickButtonsHandler _clickButtonsHandler;
+    [SerializeField] private ZoneChecker _vampirismChecker;
+
+    [SerializeField] private Health _health;
     [SerializeField] private Timer _timer;
     
     private Vampirism _vampirism;
     private Coroutine _coroutine;
 
+    public event Action Activation;
     public event Action Deactivation;
 
-    public bool IsActiveVampirism {  get; private set; }
-    public bool IsPossibleUsing { get; private set; }
+    public bool IsActive {  get; private set; }
     
     private void Awake()
     {
         _vampirism = new();
 
-        IsActiveVampirism = false;
-        IsPossibleUsing = true;
+        IsActive = false;
     }
 
-    public bool TryUse(Health taker, Health giver)
+    private void OnEnable()
     {
-        if (IsActiveVampirism == false)
-            return false;
-
-        _vampirism.Transfer(taker, giver, _healthAmount);
-
-        return true;
+        _clickButtonsHandler.FirstSideMouseButtonPressed += StartUsing;
+        _timer.OnValueChanged += Use;
     }
 
-    public void StartUsing()
+    private void OnDisable()
+    {
+        _clickButtonsHandler.FirstSideMouseButtonPressed -= StartUsing;
+        _timer.OnValueChanged -= Use;
+    }
+
+    private void Use()
+    {
+        if (IsActive == false)
+            return;
+
+        Collider2D enemy = _vampirismChecker.ReadCollider();
+
+        if (enemy != null && enemy.TryGetComponent(out Health enemyHealth))
+            _vampirism.Transfer(_health, enemyHealth, _healthAmount);
+    }
+
+    private void StartUsing()
     {
         if (_coroutine != null)
-            StopCoroutine(_coroutine);
+            return;
 
         _coroutine = StartCoroutine(StartTimers());
     }
@@ -49,24 +65,25 @@ public class VampirismSkill : MonoBehaviour
     {
         yield return Activate();
         yield return Reload();
+
+        _coroutine = null;
     }
 
     private IEnumerator Activate()
     {
-        IsActiveVampirism = true;
-        IsPossibleUsing = false;
+        IsActive = true;
+
+        Activation?.Invoke();
 
         yield return _timer.Wait(_activeTime);
     }
 
     private IEnumerator Reload()
     {
-        IsActiveVampirism = false;
+        IsActive = false;
 
         Deactivation?.Invoke();
 
         yield return _timer.WaitReverse(_reloadTime);
-
-        IsPossibleUsing = true;
     }
 }
