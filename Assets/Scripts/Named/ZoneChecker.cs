@@ -17,16 +17,16 @@ public class ZoneChecker : MonoBehaviour
         => Physics2D.OverlapCapsule(ReadPoint(), _collider.size, _collider.direction, 0f, _layer);
 
     private Vector2 ReadPoint()
-        => (Vector2)_collider.transform.position + Vector2.up * _collider.offset.y + Vector2.right * _collider.offset.x * ReadDirection();
+        => (Vector2)_collider.transform.position + Vector2.up * _collider.offset.y + Vector2.right * _collider.offset.x * GetOffsetDirection();
 
-    private int ReadDirection()
+    private int GetOffsetDirection()
     {
         const int NegativeDirection = -1;
         const int PositiveDirection = 1;
 
-        const float offset = 0.001f;
+        const float Offset = 0.001f;
 
-        int direction = transform.eulerAngles.y > -offset && transform.eulerAngles.y < offset ? PositiveDirection : NegativeDirection;
+        int direction = transform.eulerAngles.y > -Offset && transform.eulerAngles.y < Offset ? PositiveDirection : NegativeDirection;
         return direction;
     }
 }
